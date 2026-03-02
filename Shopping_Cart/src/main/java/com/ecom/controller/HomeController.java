@@ -20,4 +20,9 @@ public class HomeController {
 	public String register() {
 		return "register";
 	}
+	
+	@GetMapping("/base")
+	public String base() {
+		return "base";
+	}
 }
