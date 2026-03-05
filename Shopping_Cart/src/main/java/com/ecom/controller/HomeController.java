@@ -21,8 +21,12 @@ public class HomeController {
 		return "register";
 	}
 	
-	@GetMapping("/base")
-	public String base() {
-		return "base";
+	/*
+	 * @GetMapping("/base") public String base() { return "base"; }
+	 */
+	
+	@GetMapping("/products")
+	public String products() {
+		return "product";
 	}
 }
