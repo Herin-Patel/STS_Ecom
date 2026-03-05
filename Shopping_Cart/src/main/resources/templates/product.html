@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" xmlns:th="http://www.thymelaf.org" th:replace="~{base::layout(~{::section})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
 
 <head>
 	<meta charset="ISO-8859-1">
@@ -10,7 +10,7 @@
 </head>
 
 <body>
-	<Section>
+	<section>
 		<div class="container-fluid bg-primary p-5 mt-5">
 			<div class="row">
 				<div class="col-md-8 offset-md-2">
@@ -29,17 +29,23 @@
 
 		<div class="container-fluid mt-1">
 			<div class="row">
+				
 				<div class="col-md-2">
-					<div class="list-group">
-						<a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-							Categories
-						</a>
-						<a href="#" class="list-group-item list-group-item-action">Electronics</a>
-						<a href="#" class="list-group-item list-group-item-action">Mobile Phone</a>
-						<a href="#" class="list-group-item list-group-item-action">Clothes</a>
-						<!--<a href="#" class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link item</a>-->
+					<div class="card shadow-sm p-0 mb-5 bg-body-tertiary rounded">
+						<div class="card-body">
+							<div class="list-group">
+								<a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+									Categories
+								</a>
+								<a href="#" class="list-group-item list-group-item-action">Electronics</a>
+								<a href="#" class="list-group-item list-group-item-action">Mobile Phone</a>
+								<a href="#" class="list-group-item list-group-item-action">Clothes</a>
+								<!--<a href="#" class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link item</a>-->
+							</div>
+						</div>
 					</div>
 				</div>
+
 				<div class="col-md-10">
 					<div class="card shadow-sm p-3 mb-5 bg-body-tertiary rounded">
 						<div class="card-body">
@@ -62,7 +68,7 @@
 														20% off
 													</span>
 												</p>
-												<a class="btn btn-primary col-md-6 offset-md-3">
+												<a href="/product" class="btn btn-primary col-md-6 offset-md-3">
 													View Details
 												</a>
 											</div>
@@ -147,7 +153,7 @@
 				</div>
 			</div>
 		</div>
-	</Section>
+	</section>
 </body>
 
 </html>
