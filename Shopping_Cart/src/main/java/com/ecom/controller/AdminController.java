@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/admin")
@@ -40,20 +41,25 @@ public class AdminController {
 	}
 
 	@PostMapping("/saveCategory")
-	public String saveCategory(@ModelAttribute Category currentCategory, HttpSession session) {
-		
+	public String saveCategory(@ModelAttribute Category currentCategory, @RequestParam("file") MultipartFile file,
+			HttpSession session) {
+
+		String imageName = (file != null && !file.isEmpty()) ? file.getOriginalFilename() : "default.jpg";
+
+		currentCategory.setImageName(imageName);
+
 		if (categoryServiceObj.existCategory(currentCategory.getName())) {
 			session.setAttribute("errorMssg", "Category name already exists !");
 		} else {
 			Category savedCategory = categoryServiceObj.saveCategory(currentCategory);
-			
+
 			if (ObjectUtils.isEmpty(savedCategory)) {
 				session.setAttribute("errorMssg", "Not saved ! Internal server error.");
 			} else {
-				session.setAttribute("successMssg","Category saved successfully.");
+				session.setAttribute("successMssg", "Category saved successfully.");
 			}
 		}
-		
+
 		return "redirect:/admin/category";
 	}
 }

@@ -7,14 +7,14 @@ import jakarta.persistence.Id;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+//import lombok.Getter;
+//import lombok.Setter;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+//@Getter
+//@Setter
 public class Category {
 
 	@Id
@@ -26,5 +26,25 @@ public class Category {
 
 	public String getName() {
 		return this.name;
+	}
+
+	public String getImageName() {
+		return this.imageName;
+	}
+
+	public Boolean getIsActive() {
+		return this.isActive;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
 }
