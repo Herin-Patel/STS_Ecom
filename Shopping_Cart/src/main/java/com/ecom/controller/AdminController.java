@@ -66,25 +66,25 @@ public class AdminController {
 					session.setAttribute("errorMssg", "Not saved ! Internal server error.");
 				} else {
 					// File saveFile = new ClassPathResource("static/img").getFile();
-					
-					// Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator + file.getOriginalFilename());
-					
+
+					// Path path = Paths.get(saveFile.getAbsolutePath() + File.separator +
+					// "category_img" + File.separator + file.getOriginalFilename());
+
 					// Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-					
-					
+
 					// Save image to folder
 					String uploadDir = "C:/Users/herry/Desktop/STS_Workspace/Shopping_Cart/src/main/resources/static/img/category_img/";
-									   //"C:\\Users\\herry\\Desktop\\STS_Workspace\\Shopping_Cart\\src\\main\\resources\\static\\img\\category_img"
+					// "C:\\Users\\herry\\Desktop\\STS_Workspace\\Shopping_Cart\\src\\main\\resources\\static\\img\\category_img"
 
 					File dir = new File(uploadDir);
 					if (!dir.exists())
 						dir.mkdirs();
-					
+
 					Path path = Paths.get(uploadDir + imageName);
 					Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
 					System.out.println(path);
-					
+
 					session.setAttribute("successMssg", "Category saved successfully.");
 				}
 			}
@@ -95,18 +95,79 @@ public class AdminController {
 		}
 		return "redirect:/admin/category";
 	}
-	
+
 	@GetMapping("/deleteCategory/{id}")
 	public String deleteCategory(@PathVariable int id, HttpSession session) {
-		
+
 		Boolean deleteCategory = categoryServiceObj.deleteCategory(id);
-		
+
 		if (deleteCategory) {
 			session.setAttribute("successMssg", "Category deleted successfully");
 		} else {
-			session.setAttribute("errorMssg",  "Something went wrong on Server !");
+			session.setAttribute("errorMssg", "Something went wrong on Server !");
 		}
-		
+
 		return "redirect:/admin/category";
+	}
+
+	@GetMapping("/loadEditCategory/{id}")
+	public String loadEditCategory(@PathVariable int id, Model m) {
+		m.addAttribute("category", categoryServiceObj.getCategoryById(id));
+
+		return "admin/edit_category";
+	}
+
+	@PostMapping("/updateCategory")
+	public String updateCategory(@ModelAttribute Category category, @RequestParam("file") MultipartFile file,
+			HttpSession session) {
+		try {
+			Category oldCategory = categoryServiceObj.getCategoryById(category.getId());
+
+			String imageName = file.isEmpty() ? oldCategory.getImageName() : file.getOriginalFilename();
+
+			if (!ObjectUtils.isEmpty(category)) {
+				oldCategory.setName(category.getName());
+				oldCategory.setIsActive(category.getIsActive());
+				oldCategory.setImageName(imageName);
+			}
+
+			Category updatedCategory = categoryServiceObj.saveCategory(oldCategory);
+
+			if (!ObjectUtils.isEmpty(updatedCategory)) {
+
+				if (!file.isEmpty()) {
+					// File saveFile = new ClassPathResource("static/img").getFile();
+
+					// Path path = Paths.get(saveFile.getAbsolutePath() + File.separator +
+					// "category_img" + File.separator + file.getOriginalFilename());
+
+					// Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+					// Save image to folder
+					String uploadDir = "C:/Users/herry/Desktop/STS_Workspace/Shopping_Cart/src/main/resources/static/img/category_img/";
+					// "C:\\Users\\herry\\Desktop\\STS_Workspace\\Shopping_Cart\\src\\main\\resources\\static\\img\\category_img"
+
+					File dir = new File(uploadDir);
+					if (!dir.exists())
+						dir.mkdirs();
+
+					Path path = Paths.get(uploadDir + imageName);
+					Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+					System.out.println(path);
+				}
+
+				session.setAttribute("successMssg", "Category updated successfully");
+			} else {
+				session.setAttribute("errorMssg", "Something went wrong on Server !");
+			}
+
+		} catch (Exception expObj) {
+			System.out.println("Exception : ");
+			expObj.printStackTrace();
+			session.setAttribute("errorMssg", "Something went wrong.");
+		}
+
+		return "redirect:/admin/loadEditCategory/" + category.getId();
 	}
 }
