@@ -6,22 +6,21 @@ import com.ecom.service.CategoryService;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
-
+import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,7 +42,8 @@ public class AdminController {
 	}
 
 	@GetMapping("/category")
-	public String category() {
+	public String category(Model m) {
+		m.addAttribute("categorys", categoryServiceObj.getAllCategory());
 		return "admin/category";
 	}
 
@@ -93,6 +93,20 @@ public class AdminController {
 			expObj.printStackTrace();
 			session.setAttribute("errorMssg", "Something went wrong.");
 		}
+		return "redirect:/admin/category";
+	}
+	
+	@GetMapping("/deleteCategory/{id}")
+	public String deleteCategory(@PathVariable int id, HttpSession session) {
+		
+		Boolean deleteCategory = categoryServiceObj.deleteCategory(id);
+		
+		if (deleteCategory) {
+			session.setAttribute("successMssg", "Category deleted successfully");
+		} else {
+			session.setAttribute("errorMssg",  "Something went wrong on Server !");
+		}
+		
 		return "redirect:/admin/category";
 	}
 }
