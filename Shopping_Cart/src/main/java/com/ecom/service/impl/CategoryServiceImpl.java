@@ -14,39 +14,37 @@ import com.ecom.service.CategoryService;
 public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
-	private CategoryRepository categoryRepository;
+	private CategoryRepository categoryRepositoryObj;
 
 	@Override
 	public Category saveCategory(Category category) {
-		return categoryRepository.save(category);
+		return categoryRepositoryObj.save(category);
 	}
-	
+
 	@Override
 	public Boolean existCategory(String name) {
-		return categoryRepository.existsByName(name);
+		return categoryRepositoryObj.existsByName(name);
 	}
 
 	@Override
 	public List<Category> getAllCategory() {
-		return categoryRepository.findAll();
-	}
-	
-	@Override
-	public Boolean deleteCategory(int id) {
-		Category category = categoryRepository.findById(id).orElse(null);
-		
-		if (!ObjectUtils.isEmpty(category)) {
-			categoryRepository.delete(category);
-			return true;
-		}
-		
-		return false;
-	}
-	
-	@Override
-	public Category getCategoryById(int id) {
-		Category category = categoryRepository.findById(id).orElse(null);		
-		return category;
+		return categoryRepositoryObj.findAll();
 	}
 
+	@Override
+	public Boolean deleteCategory(int id) {
+		Category category = categoryRepositoryObj.findById(id).orElse(null);
+
+		if (!ObjectUtils.isEmpty(category)) {
+			categoryRepositoryObj.delete(category);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public Category getCategoryById(int id) {
+		Category category = categoryRepositoryObj.findById(id).orElse(null);
+		return category;
+	}
 }

@@ -1,7 +1,10 @@
 package com.ecom.controller;
 
 import com.ecom.model.Category;
+import com.ecom.model.Product;
+
 import com.ecom.service.CategoryService;
+import com.ecom.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -14,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,19 +35,26 @@ public class AdminController {
 	@Autowired
 	private CategoryService categoryServiceObj;
 
+	@Autowired
+	private ProductService productServiceObj;
+
 	@GetMapping("/")
 	public String index() {
 		return "admin/index";
 	}
 
 	@GetMapping("/loadAddProduct")
-	public String loadAddProduct() {
+	public String loadAddProduct(Model pageModel) {
+		List<Category> categories = categoryServiceObj.getAllCategory();
+
+		pageModel.addAttribute("categories", categories);
+
 		return "admin/add_product";
 	}
 
 	@GetMapping("/category")
-	public String category(Model m) {
-		m.addAttribute("categorys", categoryServiceObj.getAllCategory());
+	public String category(Model pageModel) {
+		pageModel.addAttribute("categorys", categoryServiceObj.getAllCategory());
 		return "admin/category";
 	}
 
@@ -54,7 +65,6 @@ public class AdminController {
 		try {
 
 			String imageName = (file != null && !file.isEmpty()) ? file.getOriginalFilename() : "default.jpg";
-
 			currentCategory.setImageName(imageName);
 
 			if (categoryServiceObj.existCategory(currentCategory.getName())) {
@@ -82,7 +92,6 @@ public class AdminController {
 
 					Path path = Paths.get(uploadDir + imageName);
 					Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
 					System.out.println(path);
 
 					session.setAttribute("successMssg", "Category saved successfully.");
@@ -111,8 +120,8 @@ public class AdminController {
 	}
 
 	@GetMapping("/loadEditCategory/{id}")
-	public String loadEditCategory(@PathVariable int id, Model m) {
-		m.addAttribute("category", categoryServiceObj.getCategoryById(id));
+	public String loadEditCategory(@PathVariable int id, Model pageModel) {
+		pageModel.addAttribute("category", categoryServiceObj.getCategoryById(id));
 
 		return "admin/edit_category";
 	}
@@ -169,5 +178,50 @@ public class AdminController {
 		}
 
 		return "redirect:/admin/loadEditCategory/" + category.getId();
+	}
+
+	@PostMapping("/saveProduct")
+	public String saveProduct(@ModelAttribute Product currentProduct, @RequestParam("file") MultipartFile file,
+			HttpSession session) {
+		try {
+
+			String imageName = (file != null && !file.isEmpty()) ? file.getOriginalFilename() : "default.jpg";
+			currentProduct.setImage(imageName);
+
+			Product savedProduct = productServiceObj.saveProduct(currentProduct);
+
+			if (!ObjectUtils.isEmpty(savedProduct)) {
+
+				// File saveFile = new ClassPathResource("static/img").getFile();
+
+				// Path path = Paths.get(saveFile.getAbsolutePath() + File.separator +
+				// "category_img" + File.separator + file.getOriginalFilename());
+
+				// Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+				// Save image to folder
+				String uploadDir = "C:/Users/herry/Desktop/STS_Workspace/Shopping_Cart/src/main/resources/static/img/product_img/";
+				// "C:\\Users\\herry\\Desktop\\STS_Workspace\\Shopping_Cart\\src\\main\\resources\\static\\img\\category_img"
+
+				File dir = new File(uploadDir);
+				if (!dir.exists())
+					dir.mkdirs();
+
+				Path filePath = Paths.get(uploadDir + imageName);
+				Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+				System.out.println(filePath);
+
+				session.setAttribute("successMssg", "Product saved successfully.");
+			} else {
+				session.setAttribute("errorMssg", "Something went wrong on the Server !");
+			}
+
+		} catch (Exception expObj) {
+			System.out.println("Exception : ");
+			expObj.printStackTrace();
+			session.setAttribute("errorMssg", "Something went wrong.");
+		}
+
+		return "redirect:/admin/loadAddProduct";
 	}
 }
