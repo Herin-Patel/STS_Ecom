@@ -224,4 +224,43 @@ public class AdminController {
 
 		return "redirect:/admin/loadAddProduct";
 	}
+
+	@GetMapping("/products")
+	public String loadViewProduct(Model pageModel) {
+		pageModel.addAttribute("products", productServiceObj.getAllProducts());
+		return "admin/products";
+	}
+
+	@GetMapping("/deleteProduct/{id}")
+	public String loadViewProduct(@PathVariable int id, HttpSession session) {
+		Boolean deletedProduct = productServiceObj.deleteProduct(id);
+
+		if (deletedProduct) {
+			session.setAttribute("successMssg", "Product deleted successfully.");
+		} else {
+			session.setAttribute("errorMssg", "Something went wrong on the Server !");
+		}
+
+		return "redirect:/admin/products";
+	}
+
+	@GetMapping("/editProduct/{id}")
+	public String editProduct(@PathVariable int id, Model pageModel) {
+		pageModel.addAttribute("product", productServiceObj.getProductById(id));
+		pageModel.addAttribute("categories", categoryServiceObj.getAllCategory());
+		return "admin/edit_product";
+	}
+
+	@PostMapping("/updateProduct")
+	public String updateProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile file,
+			HttpSession session, Model pageModel) {
+		Product updatedProduct = productServiceObj.updateProduct(product, file);
+
+		if (!ObjectUtils.isEmpty(updatedProduct)) {
+			session.setAttribute("successMssg", "Product updated successfully.");
+		} else {
+			session.setAttribute("errorMssg", "Something went wrong on the Server !");
+		}
+		return "redirect:/admin/editProduct/"+product.getId();
+	}
 }
