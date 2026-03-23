@@ -22,6 +22,7 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private int stock;
+	private int discount;
 
 	@Column(length = 500)
 	private String title;
@@ -31,6 +32,7 @@ public class Product {
 	private String image;
 
 	private Double price;
+	private Double discountPrice;
 
 	public int getId() {
 		return this.id;
@@ -38,6 +40,10 @@ public class Product {
 
 	public int getStock() {
 		return this.stock;
+	}
+
+	public int getDiscount() {
+		return this.discount;
 	}
 
 	public String getTitle() {
@@ -60,12 +66,20 @@ public class Product {
 		return this.price;
 	}
 
+	public Double getDiscountPrice() {
+		return this.discountPrice;
+	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
 
 	public void setStock(int stock) {
 		this.stock = stock;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
 	}
 
 	public void setTitle(String title) {
@@ -86,5 +100,9 @@ public class Product {
 
 	public void setPrice(Double price) {
 		this.price = price;
+	}
+
+	public void setDiscountPrice(Double discountPrice) {
+		this.discountPrice = discountPrice;
 	}
 }
