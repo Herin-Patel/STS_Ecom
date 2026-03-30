@@ -34,6 +34,8 @@ public class Product {
 	private Double price;
 	private Double discountPrice;
 
+	private Boolean isActive;
+
 	public int getId() {
 		return this.id;
 	}
@@ -70,6 +72,10 @@ public class Product {
 		return this.discountPrice;
 	}
 
+	public Boolean getIsActive() {
+		return this.isActive;
+	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -104,5 +110,9 @@ public class Product {
 
 	public void setDiscountPrice(Double discountPrice) {
 		this.discountPrice = discountPrice;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
 	}
 }
