@@ -2,9 +2,10 @@ package com.ecom.controller;
 
 import com.ecom.model.Category;
 import com.ecom.model.Product;
-
+import com.ecom.model.UserDtls;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
+import com.ecom.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class AdminController {
 
 	@Autowired
 	private ProductService productServiceObj;
+	
+	@Autowired
+	private UserService userServiceObj;
 
 	@GetMapping("/")
 	public String index() {
@@ -271,5 +276,16 @@ public class AdminController {
 		}
 
 		return "redirect:/admin/editProduct/" + product.getId();
+	}
+	
+	@ModelAttribute 
+	public void getUserDetails(Principal p, Model pageModel) {
+		if (p != null) {
+			String email = p.getName();
+			
+			UserDtls userDtls = userServiceObj.getUserByEmail(email);
+			
+			pageModel.addAttribute("user", userDtls);
+		}
 	}
 }

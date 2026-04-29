@@ -6,10 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -80,8 +80,8 @@ public class HomeController {
 	}
 
 	@PostMapping("/saveUser")
-	public String saveUser(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file,
-			HttpSession session) throws IOException {
+	public String saveUser(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file, HttpSession session)
+			throws IOException {
 
 		String imageName = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
 		user.setProfileImage(imageName);
@@ -117,5 +117,16 @@ public class HomeController {
 		}
 
 		return "redirect:/register";
+	}
+
+	@ModelAttribute
+	public void getUserDetails(Principal p, Model pageModel) {
+		if (p != null) {
+			String userEmail = p.getName();
+
+			UserDtls userDtls = userServiceObj.getUserByEmail(userEmail);
+
+			pageModel.addAttribute("user", userDtls);
+		}
 	}
 }

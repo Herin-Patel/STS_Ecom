@@ -20,11 +20,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDtls saveUser(UserDtls user) {
 		user.setRole("ROLE_USER");
-		
+
 		String encodedPassword = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodedPassword);
-		
+
 		UserDtls savedUser = userRepositoryObj.save(user);
 		return savedUser;
+	}
+
+	@Override
+	public UserDtls getUserByEmail(String email) {
+		return userRepositoryObj.findByEmail(email);
 	}
 }
