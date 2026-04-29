@@ -287,5 +287,8 @@ public class AdminController {
 			
 			pageModel.addAttribute("user", userDtls);
 		}
+		
+		List<Category> allActiveCategory = categoryServiceObj.getAllActiveCategory();
+		pageModel.addAttribute("categorys", allActiveCategory);
 	}
 }

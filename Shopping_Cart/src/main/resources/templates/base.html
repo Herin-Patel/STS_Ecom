@@ -52,12 +52,19 @@
 							Category
 						</a>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="#">Category 1</a></li>
-							<li><a class="dropdown-item" href="#">Category 2</a></li>
-							<li>
+							<!--<li><a class="dropdown-item" href="#">Category 1</a></li>
+							<li><a class="dropdown-item" href="#">Category 2</a></li>-->
+
+							<li th:each="c:${categorys}">
+								<a class="dropdown-item" th:href="@{'/products?category='+${c.name}}">
+									[[${c.name}]]
+								</a>
+							</li>
+
+							<!--<li>
 								<hr class="dropdown-divider">
 							</li>
-							<li><a class="dropdown-item" href="#">Something else here</a></li>
+							<li><a class="dropdown-item" href="#">Something else here</a></li>-->
 						</ul>
 					</li>
 
@@ -83,13 +90,26 @@
 					</th:block>
 
 					<th:block th:if="${user!=null}">
-						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="/signin">
-								<i class="fa-solid fa-right-to-bracket" style="color: rgb(255, 255, 255);"></i>
-								[[${user.name}]]</a>
+						<li class="nav-item dropdown">
+							<a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+								aria-expanded="false">
+								<i class="fa-solid fa-user"></i>
+								[[${user.name}]]
+							</a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="#">Profile</a></li>
+								<li><a class="dropdown-item" href="#">Another Action</a></li>
+								<li>
+									<hr class="dropdown-divider">
+								</li>
+								<li><a class="dropdown-item" href="#">Something else here</a></li>
+							</ul>
 						</li>
+
 						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="/logout">Logout</a>
+							<a class="nav-link active" aria-current="page" href="/logout">
+								<i class="fa-solid fa-right-to-bracket" style="color: rgb(255, 255, 255);"></i>
+								Logout</a>
 						</li>
 					</th:block>
 

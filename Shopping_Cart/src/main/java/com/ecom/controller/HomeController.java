@@ -41,6 +41,19 @@ public class HomeController {
 	@Autowired
 	private UserService userServiceObj;
 
+	@ModelAttribute
+	public void getUserDetails(Principal p, Model pageModel) {
+		if (p != null) {
+			String userEmail = p.getName();
+			UserDtls userDtls = userServiceObj.getUserByEmail(userEmail);
+
+			pageModel.addAttribute("user", userDtls);
+		}
+
+		List<Category> allActiveCategory = categoryServiceObj.getAllActiveCategory();
+		pageModel.addAttribute("categorys", allActiveCategory);
+	}
+
 	@GetMapping("/")
 	public String index() {
 		return "index";
@@ -117,16 +130,5 @@ public class HomeController {
 		}
 
 		return "redirect:/register";
-	}
-
-	@ModelAttribute
-	public void getUserDetails(Principal p, Model pageModel) {
-		if (p != null) {
-			String userEmail = p.getName();
-
-			UserDtls userDtls = userServiceObj.getUserByEmail(userEmail);
-
-			pageModel.addAttribute("user", userDtls);
-		}
 	}
 }
