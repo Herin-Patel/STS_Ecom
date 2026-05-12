@@ -32,6 +32,8 @@ public class UserDtls {
 	private String profileImage;
 	private String role;
 
+	private Boolean isEnable;
+
 	public int getId() {
 		return this.id;
 	}
@@ -76,6 +78,10 @@ public class UserDtls {
 		return this.role;
 	}
 
+	public Boolean getIsEnable() {
+		return this.isEnable;
+	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -118,5 +124,9 @@ public class UserDtls {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public void setIsEnable(Boolean isEnable) {
+		this.isEnable = isEnable;
 	}
 }
