@@ -39,7 +39,7 @@ public class AdminController {
 
 	@Autowired
 	private ProductService productServiceObj;
-	
+
 	@Autowired
 	private UserService userServiceObj;
 
@@ -277,18 +277,38 @@ public class AdminController {
 
 		return "redirect:/admin/editProduct/" + product.getId();
 	}
-	
-	@ModelAttribute 
+
+	@ModelAttribute
 	public void getUserDetails(Principal p, Model pageModel) {
 		if (p != null) {
 			String email = p.getName();
-			
+
 			UserDtls userDtls = userServiceObj.getUserByEmail(email);
-			
+
 			pageModel.addAttribute("user", userDtls);
 		}
-		
+
 		List<Category> allActiveCategory = categoryServiceObj.getAllActiveCategory();
 		pageModel.addAttribute("categorys", allActiveCategory);
+	}
+
+	@GetMapping("/users")
+	public String getAllUsers(Model pageModel) {
+		List<UserDtls> allUsers = userServiceObj.getUsers("ROLE_USER");
+		pageModel.addAttribute("users", allUsers);
+		return "admin/users";
+	}
+
+	@GetMapping("/updateStatus")
+	public String updateUserAccountStatus(@RequestParam Boolean status, @RequestParam Integer id, HttpSession session) {
+		Boolean value = userServiceObj.updateAccountStatus(id, status);
+
+		if (value) {
+			session.setAttribute("successMssg", "Account status has been updated.");
+		} else {
+			session.setAttribute("errorMssg", "Something went wrong on Server ! Account status not updated.");
+		}
+
+		return "redirect:/admin/users";
 	}
 }

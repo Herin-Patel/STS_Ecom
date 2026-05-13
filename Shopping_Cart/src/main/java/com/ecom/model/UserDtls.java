@@ -126,7 +126,7 @@ public class UserDtls {
 		this.role = role;
 	}
 
-	public void setIsEnable(Boolean isEnable) {
-		this.isEnable = isEnable;
+	public void setIsEnable(Boolean status) {
+		this.isEnable = status;
 	}
 }
