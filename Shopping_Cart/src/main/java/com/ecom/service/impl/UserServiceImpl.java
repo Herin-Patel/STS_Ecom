@@ -2,10 +2,12 @@ package com.ecom.service.impl;
 
 import com.ecom.model.UserDtls;
 import com.ecom.service.UserService;
+import com.ecom.util.AppConstant;
 import com.ecom.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +27,8 @@ public class UserServiceImpl implements UserService {
 	public UserDtls saveUser(UserDtls user) {
 		user.setRole("ROLE_USER");
 		user.setIsEnable(true);
+		user.setAccountNotLocked(true);
+		user.setFailedAttempt(0);
 
 		String encodedPassword = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodedPassword);
@@ -45,17 +49,52 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Boolean updateAccountStatus(Integer id, Boolean status) {
-		Optional<UserDtls>  userFound =  userRepositoryObj.findById(id);
-		
+		Optional<UserDtls> userFound = userRepositoryObj.findById(id);
+
 		if (userFound.isPresent()) {
 			UserDtls userDtlObj = userFound.get();
 			userDtlObj.setIsEnable(status);
 			userRepositoryObj.save(userDtlObj);
 			return true;
 		}
-		
+
 		return false;
 	}
-	
-	
+
+	@Override
+	public void increaseFailedAttempt(UserDtls user) {
+		int attempt = user.getFailedAttempt() + 1;
+		user.setFailedAttempt(attempt);
+		userRepositoryObj.save(user);
+	}
+
+	@Override
+	public void userAccountLock(UserDtls user) {
+		user.setAccountNotLocked(false);
+		user.setLockTime(new Date());
+		userRepositoryObj.save(user);
+	}
+
+	@Override
+	public boolean unlockAccountTimeExpired(UserDtls user) {
+		long lockTime = user.getLockTime().getTime();
+		long unLockTime = lockTime + AppConstant.UNLOCK_DURATION_TIME;
+
+		long currentTime = System.currentTimeMillis();
+
+		if (unLockTime < currentTime) {
+			user.setAccountNotLocked(true);
+			user.setFailedAttempt(0);
+			user.setLockTime(null);
+			userRepositoryObj.save(user);
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public void resetAttempt(int userId) {
+
+	}
 }

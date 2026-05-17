@@ -3,9 +3,10 @@ package com.ecom.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +18,10 @@ public class SecurityConfig {
 	
 	@Autowired
 	private AuthenticationSuccessHandler authenticationSuccessHandler;
+	
+	@Lazy
+	@Autowired
+	private AuthenticationFailureHandler authenticationFailureHandler;
 	
 	@Bean
 	public PasswordEncoder myPasswordEncoder() {
@@ -48,6 +53,7 @@ public class SecurityConfig {
 			.formLogin(form->form.loginPage("/signin")
 								 .loginProcessingUrl("/login")
 //								 .defaultSuccessUrl("/")
+								 .failureHandler(authenticationFailureHandler)
 								 .successHandler(authenticationSuccessHandler)
 					)
 			.logout(logout->logout.permitAll());
