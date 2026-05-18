@@ -131,4 +131,29 @@ public class HomeController {
 
 		return "redirect:/register";
 	}
+
+	// Forgot Password Code
+	@GetMapping("/forgot-password")
+	public String showForgotPassword() {
+		return "forgot_password.html";
+	}
+
+	@PostMapping("/forgot-password")
+	public String processForgotPassword(@RequestParam String email, HttpSession session) {
+
+		UserDtls userByEmail = userServiceObj.getUserByEmail(email);
+
+		if (ObjectUtils.isEmpty(userByEmail)) {
+			session.setAttribute("mssg", "Invalid Email !");
+		} else {
+			sendMail();
+		}
+
+		return "forgot_password.html";
+	}
+
+	@GetMapping("/reset-password")
+	public String showResetPassword() {
+		return "reset_password.html";
+	}
 }
