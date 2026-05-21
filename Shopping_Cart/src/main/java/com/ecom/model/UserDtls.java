@@ -41,6 +41,8 @@ public class UserDtls {
 
 	private Date lockTime;
 
+	private String resetToken;
+
 	// All Getter Methods
 	public int getId() {
 		return this.id;
@@ -102,6 +104,10 @@ public class UserDtls {
 		return this.lockTime;
 	}
 
+	public String getResetToken() {
+		return this.resetToken;
+	}
+
 	// All Setter Methods
 	public void setId(int id) {
 		this.id = id;
@@ -161,5 +167,9 @@ public class UserDtls {
 
 	public void setLockTime(Date lockTime) {
 		this.lockTime = lockTime;
+	}
+
+	public void setResetToken(String resetToken) {
+		this.resetToken = resetToken;
 	}
 }

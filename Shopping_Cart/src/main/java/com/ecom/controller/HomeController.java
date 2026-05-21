@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,7 @@ import com.ecom.model.UserDtls;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
+import com.ecom.util.CommonUtil;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -144,12 +146,22 @@ public class HomeController {
 		UserDtls userByEmail = userServiceObj.getUserByEmail(email);
 
 		if (ObjectUtils.isEmpty(userByEmail)) {
-			session.setAttribute("mssg", "Invalid Email !");
+			session.setAttribute("errorMssg", "Invalid Email !");
 		} else {
-			sendMail();
+			
+			String resetToken = UUID.randomUUID().toString();
+			userServiceObj.updateUserResetToken(email, resetToken);
+			
+			Boolean mailSent = CommonUtil.sendMail();
+
+			if (mailSent) {
+				session.setAttribute("successMssg", "Please check your email. Password reset link is sent.");
+			} else {
+				session.setAttribute("errorMssg", "Something went wrong on Server. Email not sent !");
+			}
 		}
 
-		return "forgot_password.html";
+		return "redirect:/forgot-password";
 	}
 
 	@GetMapping("/reset-password")
