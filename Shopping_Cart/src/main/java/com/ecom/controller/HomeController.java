@@ -2,6 +2,7 @@ package com.ecom.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,6 +30,8 @@ import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
 import com.ecom.util.CommonUtil;
 
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -141,18 +144,22 @@ public class HomeController {
 	}
 
 	@PostMapping("/forgot-password")
-	public String processForgotPassword(@RequestParam String email, HttpSession session) {
+	public String processForgotPassword(@RequestParam String email, HttpSession session, HttpServletRequest request)
+			throws UnsupportedEncodingException, MessagingException {
 
 		UserDtls userByEmail = userServiceObj.getUserByEmail(email);
 
 		if (ObjectUtils.isEmpty(userByEmail)) {
 			session.setAttribute("errorMssg", "Invalid Email !");
 		} else {
-			
+
 			String resetToken = UUID.randomUUID().toString();
 			userServiceObj.updateUserResetToken(email, resetToken);
-			
-			Boolean mailSent = CommonUtil.sendMail();
+
+			// Generate URL : http://localhost:8080/reset-password?token=sfgdhbhdfsgfdgr
+			String url = CommonUtil.generateUrl(request) + "/reset-password?token=" + resetToken;
+
+			Boolean mailSent = CommonUtil.sendMail(url, email);
 
 			if (mailSent) {
 				session.setAttribute("successMssg", "Please check your email. Password reset link is sent.");

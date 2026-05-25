@@ -1,8 +1,45 @@
 package com.ecom.util;
 
+import java.io.UnsupportedEncodingException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
+
 public class CommonUtil {
 
-	public static Boolean sendMail() {
-		return false;
+	@Autowired
+	private static JavaMailSender mailSender;
+
+	public static Boolean sendMail(String url, String recipientMail)
+			throws UnsupportedEncodingException, MessagingException {
+
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		helper.setFrom("herrypatel7290@gmail.com", "Shopping Cart");
+		helper.setTo(recipientMail);
+
+		String content = "<p>Hello, </p>" + "<p>You have requested to reset your password. </p>"
+				+ "<p>Click the link below to change your password : </p>" + "<p><a href=\"" + url
+				+ "\">Change my password</a></p>";
+
+		helper.setSubject("Password Reset");
+		helper.setText(content, true);
+		mailSender.send(message);
+
+		return true;
+	}
+
+	public static String generateUrl(HttpServletRequest request) {
+
+		// http://localhost:8080/forgot-password
+		String siteUrl = request.getRequestURI().toString();
+
+		return siteUrl.replace(request.getServletPath(), "");
 	}
 }
