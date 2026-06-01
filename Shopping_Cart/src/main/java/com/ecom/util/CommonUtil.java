@@ -5,18 +5,19 @@ import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 
+@Component
 public class CommonUtil {
 
 	@Autowired
-	private static JavaMailSender mailSender;
+	private JavaMailSender mailSender;
 
-	public static Boolean sendMail(String url, String recipientMail)
-			throws UnsupportedEncodingException, MessagingException {
+	public Boolean sendMail(String url, String recipientMail) throws UnsupportedEncodingException, MessagingException {
 
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);

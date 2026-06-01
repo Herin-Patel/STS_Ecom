@@ -45,6 +45,9 @@ public class HomeController {
 
 	@Autowired
 	private UserService userServiceObj;
+	
+	@Autowired
+	private CommonUtil commonUtilObj;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model pageModel) {
@@ -159,7 +162,7 @@ public class HomeController {
 			// Generate URL : http://localhost:8080/reset-password?token=sfgdhbhdfsgfdgr
 			String url = CommonUtil.generateUrl(request) + "/reset-password?token=" + resetToken;
 
-			Boolean mailSent = CommonUtil.sendMail(url, email);
+			Boolean mailSent = commonUtilObj.sendMail(url, email);
 
 			if (mailSent) {
 				session.setAttribute("successMssg", "Please check your email. Password reset link is sent.");
