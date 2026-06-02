@@ -104,4 +104,14 @@ public class UserServiceImpl implements UserService {
 		userFound.setResetToken(resetToken);
 		userRepositoryObj.save(userFound);
 	}
+
+	@Override
+	public UserDtls getUserByToken(String token) {
+		return userRepositoryObj.findByResetToken(token);
+	}
+
+	@Override
+	public UserDtls updateUser(UserDtls user) {
+		return userRepositoryObj.save(user);
+	}
 }

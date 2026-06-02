@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -45,9 +46,12 @@ public class HomeController {
 
 	@Autowired
 	private UserService userServiceObj;
-	
+
 	@Autowired
 	private CommonUtil commonUtilObj;
+
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model pageModel) {
@@ -175,7 +179,36 @@ public class HomeController {
 	}
 
 	@GetMapping("/reset-password")
-	public String showResetPassword() {
-		return "reset_password.html";
+	public String showResetPassword(@RequestParam String token, HttpSession session, Model pageModel) {
+
+		// Token validation
+		UserDtls userByToken = userServiceObj.getUserByToken(token);
+
+		if (userByToken == null) {
+			pageModel.addAttribute("errorMssg", "Your link is invalid or expired !");
+			return "error";
+		}
+
+		return "reset_password";
+	}
+
+	@PostMapping("/reset-password")
+	public String resetPassword(@RequestParam String token, @RequestParam String password, HttpSession session,
+			Model pageModel) {
+
+		// Token validation
+		UserDtls userByToken = userServiceObj.getUserByToken(token);
+
+		if (userByToken == null) {
+			pageModel.addAttribute("errorMssg", "Your link is invalid or expired !");
+			return "error";
+		} else {
+			userByToken.setPassword(passwordEncoder.encode(password));
+			userByToken.setResetToken(null); // Once the user resets the password, set the token to null
+			userServiceObj.updateUser(userByToken);
+			session.setAttribute("successMssg", "Password changed siccessfully.");
+
+			return "redirect:/reset-password";
+		}
 	}
 }
