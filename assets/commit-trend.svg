@@ -27,9 +27,9 @@
     <rect
       class="bar"
       x="60"
-      y="110.76923076923077"
+      y="142.5"
       width="45"
-      height="169.23076923076923" />
+      height="137.5" />
 
     <text
       class="label"
@@ -41,16 +41,16 @@
     <text
       class="label"
       x="60"
-      y="100.76923076923077">
+      y="132.5">
       10
     </text>
     
     <rect
       class="bar"
       x="123"
-      y="263.0769230769231"
+      y="266.25"
       width="45"
-      height="16.923076923076923" />
+      height="13.75" />
 
     <text
       class="label"
@@ -62,16 +62,16 @@
     <text
       class="label"
       x="123"
-      y="253.07692307692307">
+      y="256.25">
       1
     </text>
     
     <rect
       class="bar"
       x="186"
-      y="195.3846153846154"
+      y="211.25"
       width="45"
-      height="84.61538461538461" />
+      height="68.75" />
 
     <text
       class="label"
@@ -83,16 +83,16 @@
     <text
       class="label"
       x="186"
-      y="185.3846153846154">
+      y="201.25">
       5
     </text>
     
     <rect
       class="bar"
       x="249"
-      y="246.15384615384616"
+      y="252.5"
       width="45"
-      height="33.84615384615385" />
+      height="27.5" />
 
     <text
       class="label"
@@ -104,16 +104,16 @@
     <text
       class="label"
       x="249"
-      y="236.15384615384616">
+      y="242.5">
       2
     </text>
     
     <rect
       class="bar"
       x="312"
-      y="263.0769230769231"
+      y="266.25"
       width="45"
-      height="16.923076923076923" />
+      height="13.75" />
 
     <text
       class="label"
@@ -125,16 +125,16 @@
     <text
       class="label"
       x="312"
-      y="253.07692307692307">
+      y="256.25">
       1
     </text>
     
     <rect
       class="bar"
       x="375"
-      y="263.0769230769231"
+      y="266.25"
       width="45"
-      height="16.923076923076923" />
+      height="13.75" />
 
     <text
       class="label"
@@ -146,16 +146,16 @@
     <text
       class="label"
       x="375"
-      y="253.07692307692307">
+      y="256.25">
       1
     </text>
     
     <rect
       class="bar"
       x="438"
-      y="263.0769230769231"
+      y="266.25"
       width="45"
-      height="16.923076923076923" />
+      height="13.75" />
 
     <text
       class="label"
@@ -167,16 +167,16 @@
     <text
       class="label"
       x="438"
-      y="253.07692307692307">
+      y="256.25">
       1
     </text>
     
     <rect
       class="bar"
       x="501"
-      y="246.15384615384616"
+      y="252.5"
       width="45"
-      height="33.84615384615385" />
+      height="27.5" />
 
     <text
       class="label"
@@ -188,16 +188,16 @@
     <text
       class="label"
       x="501"
-      y="236.15384615384616">
+      y="242.5">
       2
     </text>
     
     <rect
       class="bar"
       x="564"
-      y="229.23076923076923"
+      y="238.75"
       width="45"
-      height="50.769230769230774" />
+      height="41.25" />
 
     <text
       class="label"
@@ -209,16 +209,16 @@
     <text
       class="label"
       x="564"
-      y="219.23076923076923">
+      y="228.75">
       3
     </text>
     
     <rect
       class="bar"
       x="627"
-      y="246.15384615384616"
+      y="252.5"
       width="45"
-      height="33.84615384615385" />
+      height="27.5" />
 
     <text
       class="label"
@@ -230,16 +230,16 @@
     <text
       class="label"
       x="627"
-      y="236.15384615384616">
+      y="242.5">
       2
     </text>
     
     <rect
       class="bar"
       x="690"
-      y="263.0769230769231"
+      y="266.25"
       width="45"
-      height="16.923076923076923" />
+      height="13.75" />
 
     <text
       class="label"
@@ -251,7 +251,7 @@
     <text
       class="label"
       x="690"
-      y="253.07692307692307">
+      y="256.25">
       1
     </text>
     
@@ -273,6 +273,6 @@
       class="label"
       x="753"
       y="50.0">
-      13
+      16
     </text>
     </svg>
