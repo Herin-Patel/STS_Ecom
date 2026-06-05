@@ -185,10 +185,11 @@ public class HomeController {
 		UserDtls userByToken = userServiceObj.getUserByToken(token);
 
 		if (userByToken == null) {
-			pageModel.addAttribute("errorMssg", "Your link is invalid or expired !");
-			return "error";
+			pageModel.addAttribute("mssg", "Your link is invalid or expired !");
+			return "message";
 		}
 
+		pageModel.addAttribute("token", token);
 		return "reset_password";
 	}
 
@@ -201,14 +202,15 @@ public class HomeController {
 
 		if (userByToken == null) {
 			pageModel.addAttribute("errorMssg", "Your link is invalid or expired !");
-			return "error";
+			return "message";
 		} else {
 			userByToken.setPassword(passwordEncoder.encode(password));
 			userByToken.setResetToken(null); // Once the user resets the password, set the token to null
 			userServiceObj.updateUser(userByToken);
-			session.setAttribute("successMssg", "Password changed siccessfully.");
-
-			return "redirect:/reset-password";
+			
+			//session.setAttribute("successMssg", "Password changed successfully.");
+			pageModel.addAttribute("mssg", "Password changed successfully.");
+			return "message";
 		}
 	}
 }
