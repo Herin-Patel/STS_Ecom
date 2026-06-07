@@ -60,7 +60,7 @@ public class HomeController {
 			UserDtls userDtls = userServiceObj.getUserByEmail(userEmail);
 
 			pageModel.addAttribute("user", userDtls);
-		}
+		} 
 
 		List<Category> allActiveCategory = categoryServiceObj.getAllActiveCategory();
 		pageModel.addAttribute("categorys", allActiveCategory);
@@ -207,8 +207,8 @@ public class HomeController {
 			userByToken.setPassword(passwordEncoder.encode(password));
 			userByToken.setResetToken(null); // Once the user resets the password, set the token to null
 			userServiceObj.updateUser(userByToken);
-			
-			//session.setAttribute("successMssg", "Password changed successfully.");
+
+			// session.setAttribute("successMssg", "Password changed successfully.");
 			pageModel.addAttribute("mssg", "Password changed successfully.");
 			return "message";
 		}

@@ -6,24 +6,33 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ecom.model.Cart;
 import com.ecom.model.Category;
 import com.ecom.model.UserDtls;
+import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
 import com.ecom.service.UserService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
-	
+
 	@Autowired
 	private UserService userServiceObj;
-	
+
 	@Autowired
 	private CategoryService categoryServiceObj;
+
+	@Autowired
+	private CartService cartServiceObj;
 
 	@GetMapping("/")
 	public String home() {
@@ -39,8 +48,20 @@ public class UserController {
 
 			pageModel.addAttribute("user", userDtls);
 		}
-		
+
 		List<Category> allActiveCategory = categoryServiceObj.getAllActiveCategory();
 		pageModel.addAttribute("categorys", allActiveCategory);
+	}
+
+	@GetMapping("/addCart")
+	public String addToCart(@RequestParam Integer pid, @RequestParam Integer uid, HttpSession session) {
+		Cart savedCart = cartServiceObj.saveCart(pid, uid);
+
+		if (ObjectUtils.isEmpty(savedCart)) {
+			session.setAttribute("errorMssg", "Failed to add product to Cart !");
+		} else {
+			session.setAttribute("successMssg", "Product addded to Cart successfully.");
+		}
+		return "redirect:/product/" + pid;
 	}
 }
