@@ -90,12 +90,17 @@
 					</th:block>
 
 					<th:block th:if="${user!=null}">
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="/user/cart">
+								<i class="fa-solid fa-cart-shopping"></i>
+								Cart [ [[${userCartCount}]] ]</a>
+						</li>
+
 						<li class="nav-item dropdown">
 							<a class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
 								aria-expanded="false">
 								<i class="fa-solid fa-user"></i>
-								[[${user.name}]]
-							</a>
+								[[${user.name}]]</a>
 							<ul class="dropdown-menu">
 								<li><a class="dropdown-item" href="#">Profile</a></li>
 								<li><a class="dropdown-item" href="#">Another Action</a></li>

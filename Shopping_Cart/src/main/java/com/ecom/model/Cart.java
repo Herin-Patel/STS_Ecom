@@ -33,6 +33,9 @@ public class Cart {
 	@Transient
 	private Double totalPrice;
 
+	@Transient
+	private Double totalOrderPrice;
+
 	// --------------------------
 	// All getter methods
 	// --------------------------
@@ -57,6 +60,10 @@ public class Cart {
 		return this.totalPrice;
 	}
 
+	public double getTotalOrderPrice() {
+		return this.totalOrderPrice;
+	}
+
 	// --------------------------
 	// All setter methods
 	// --------------------------
@@ -79,5 +86,9 @@ public class Cart {
 
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public void setTotalOrderPrice(double totalOrderPrice) {
+		this.totalOrderPrice = totalOrderPrice;
 	}
 }

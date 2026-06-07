@@ -43,10 +43,12 @@ public class UserController {
 	public void getUserDetails(Principal p, Model pageModel) {
 		if (p != null) {
 			String email = p.getName();
-
 			UserDtls userDtls = userServiceObj.getUserByEmail(email);
 
 			pageModel.addAttribute("user", userDtls);
+
+			Integer userCartCount = cartServiceObj.getUserCartCount(userDtls.getId());
+			pageModel.addAttribute("userCartCount", userCartCount);
 		}
 
 		List<Category> allActiveCategory = categoryServiceObj.getAllActiveCategory();
@@ -63,5 +65,21 @@ public class UserController {
 			session.setAttribute("successMssg", "Product addded to Cart successfully.");
 		}
 		return "redirect:/product/" + pid;
+	}
+
+	@GetMapping("/cart")
+	public String loadCartPage(Principal p, Model pageModel) {
+		UserDtls user = getLoggedInUserDetails(p);
+
+		List<Cart> carts = cartServiceObj.getCartsByUser(user.getId());
+		pageModel.addAttribute("carts", carts);
+
+		return "/user/cart";
+	}
+
+	private UserDtls getLoggedInUserDetails(Principal p) {
+		String email = p.getName();
+		UserDtls userDtls = userServiceObj.getUserByEmail(email);
+		return userDtls;
 	}
 }

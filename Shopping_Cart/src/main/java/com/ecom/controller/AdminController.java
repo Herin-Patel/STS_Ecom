@@ -3,6 +3,7 @@ package com.ecom.controller;
 import com.ecom.model.Category;
 import com.ecom.model.Product;
 import com.ecom.model.UserDtls;
+import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
@@ -42,6 +43,9 @@ public class AdminController {
 
 	@Autowired
 	private UserService userServiceObj;
+
+	@Autowired
+	private CartService cartServiceObj;
 
 	@GetMapping("/")
 	public String index() {
@@ -282,10 +286,12 @@ public class AdminController {
 	public void getUserDetails(Principal p, Model pageModel) {
 		if (p != null) {
 			String email = p.getName();
-
 			UserDtls userDtls = userServiceObj.getUserByEmail(email);
 
 			pageModel.addAttribute("user", userDtls);
+
+			Integer userCartCount = cartServiceObj.getUserCartCount(userDtls.getId());
+			pageModel.addAttribute("userCartCount", userCartCount);
 		}
 
 		List<Category> allActiveCategory = categoryServiceObj.getAllActiveCategory();

@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ecom.model.Category;
 import com.ecom.model.Product;
 import com.ecom.model.UserDtls;
+import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
@@ -53,6 +54,9 @@ public class HomeController {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
+	@Autowired
+	private CartService cartServiceObj;
+
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model pageModel) {
 		if (p != null) {
@@ -60,7 +64,10 @@ public class HomeController {
 			UserDtls userDtls = userServiceObj.getUserByEmail(userEmail);
 
 			pageModel.addAttribute("user", userDtls);
-		} 
+
+			Integer userCartCount = cartServiceObj.getUserCartCount(userDtls.getId());
+			pageModel.addAttribute("userCartCount", userCartCount);
+		}
 
 		List<Category> allActiveCategory = categoryServiceObj.getAllActiveCategory();
 		pageModel.addAttribute("categorys", allActiveCategory);
