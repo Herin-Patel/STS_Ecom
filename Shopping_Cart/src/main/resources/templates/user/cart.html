@@ -43,11 +43,25 @@
 						<tbody>
 							<tr th:each="cartObj, c:${carts}">
 								<th scope="row">[[${c.count}]]</th>
-								<td><img th:src="@{'/img/product_img/'+${cartObj.product.image}}" width="70px" height="70px"></td>
+								<td><img th:src="@{'/img/product_img/'+${cartObj.product.image}}" width="70px"
+										height="70px"></td>
 								<td>[[${cartObj.product.title}]]</td>
 								<td>[[${cartObj.product.discountPrice}]]</td>
-								<td>[[${cartObj.quantity}]]</td>
+								<td calss="text-center">
+									<a th:href="@{'/user/updateCartQuantity?value=increase&cid='+${cartObj.id}}">
+										<i class="fa-solid fa-circle-plus"></i>
+									</a>
+									[ [[${cartObj.quantity}]] ]
+									<a th:href="@{'/user/updateCartQuantity?value=decrease&cid='+${cartObj.id}}">
+										<i class="fa-solid fa-circle-minus"></i>
+									</a>
+								</td>
 								<td>[[${cartObj.totalPrice}]]</td>
+							</tr>
+							<tr>
+								<td colspan="4"></td>
+								<td class="fw-bold">Total Price</td>
+								<td class="fw-bold">&#8377; [[${totalOrderPrice}]]</td>
 							</tr>
 						</tbody>
 					</table>

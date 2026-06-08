@@ -74,6 +74,9 @@ public class UserController {
 		List<Cart> carts = cartServiceObj.getCartsByUser(user.getId());
 		pageModel.addAttribute("carts", carts);
 
+		Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
+		pageModel.addAttribute("totalOrderPrice", totalOrderPrice);
+
 		return "/user/cart";
 	}
 
@@ -81,5 +84,13 @@ public class UserController {
 		String email = p.getName();
 		UserDtls userDtls = userServiceObj.getUserByEmail(email);
 		return userDtls;
+	}
+	
+	@GetMapping("/updateCartQuantity")
+	public String updateCartQuantity(@RequestParam String value, @RequestParam Integer cartId) {
+		
+		Boolean quantityUpdated = cartServiceObj.updateQuantity(value, cartId);
+		
+		return null;
 	}
 }

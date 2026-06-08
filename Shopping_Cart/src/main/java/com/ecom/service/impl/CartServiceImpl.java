@@ -80,4 +80,27 @@ public class CartServiceImpl implements CartService {
 		return countByUserId;
 	}
 
+	@Override
+	public Boolean updateQuantity(String value, Integer cartId) {
+
+		// Exception handling
+		if (value.isEmpty() || cartId == null) {
+			return false;
+		}
+		
+		Cart cartObj = cartRepositoryObj.findById(cartId);
+
+		if (ObjectUtils.isEmpty(cartObj)) {
+			return false;
+		}
+		
+		if (value.equals("increase")) {
+			cartObj.setQuantity(cartObj.getQuantity()+1);
+		} else if (value.equals("decrease")) {
+			cartObj.setQuantity(cartObj.getQuantity()-1);
+		} 
+		cartRepositoryObj.save(cartObj);
+		
+		return true;
+	}
 }
