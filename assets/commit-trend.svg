@@ -258,9 +258,9 @@
     <rect
       class="bar"
       x="753"
-      y="270.0"
+      y="250.0"
       width="45"
-      height="10.0" />
+      height="29.999999999999996" />
 
     <text
       class="label"
@@ -272,7 +272,7 @@
     <text
       class="label"
       x="753"
-      y="260.0">
-      1
+      y="240.0">
+      3
     </text>
     </svg>
