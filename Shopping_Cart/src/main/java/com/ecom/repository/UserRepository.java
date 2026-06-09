@@ -1,6 +1,5 @@
 package com.ecom.repository;
 
-import com.ecom.model.Cart;
 import com.ecom.model.UserDtls;
 
 import java.util.List;

@@ -73,9 +73,12 @@ public class UserController {
 
 		List<Cart> carts = cartServiceObj.getCartsByUser(user.getId());
 		pageModel.addAttribute("carts", carts);
-
-		Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
-		pageModel.addAttribute("totalOrderPrice", totalOrderPrice);
+		
+		if (carts.size()>0) {
+			Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
+			pageModel.addAttribute("totalOrderPrice", totalOrderPrice);
+		}
+		
 
 		return "/user/cart";
 	}
@@ -85,12 +88,18 @@ public class UserController {
 		UserDtls userDtls = userServiceObj.getUserByEmail(email);
 		return userDtls;
 	}
-	
-	@GetMapping("/updateCartQuantity")
-	public String updateCartQuantity(@RequestParam String value, @RequestParam Integer cartId) {
-		
+
+	@GetMapping("/cartQuantityUpdate")
+	public String updateCartQuantity(@RequestParam String value, @RequestParam Integer cartId, HttpSession session) {
+
 		Boolean quantityUpdated = cartServiceObj.updateQuantity(value, cartId);
-		
-		return null;
+
+		if (quantityUpdated) {
+			session.setAttribute("successMssg", "Cart quantiy updated successfully.");
+		} else {
+			session.setAttribute("errorMssg", "Error in updating Cart quantity.");
+		}
+
+		return "redirect:/user/cart";
 	}
 }

@@ -87,20 +87,37 @@ public class CartServiceImpl implements CartService {
 		if (value.isEmpty() || cartId == null) {
 			return false;
 		}
-		
-		Cart cartObj = cartRepositoryObj.findById(cartId);
+
+		Cart cartObj = cartRepositoryObj.findById(cartId).get();
 
 		if (ObjectUtils.isEmpty(cartObj)) {
 			return false;
 		}
-		
-		if (value.equals("increase")) {
-			cartObj.setQuantity(cartObj.getQuantity()+1);
-		} else if (value.equals("decrease")) {
-			cartObj.setQuantity(cartObj.getQuantity()-1);
-		} 
+
+		int updatedQuantity = 0;
+
+		/*
+		 * if (value.equalsIgnoreCase("increase")) {
+		 * cartObj.setQuantity(cartObj.getQuantity() + 1); } else if
+		 * (value.equalsIgnoreCase("decrease")) {
+		 * cartObj.setQuantity(cartObj.getQuantity() - 1); }
+		 */
+
+		if (value.equalsIgnoreCase("decrease")) {
+			updatedQuantity = cartObj.getQuantity() - 1;
+
+			if (updatedQuantity <= 0) {
+				cartRepositoryObj.deleteById(cartId);
+				//cartRepositoryObj.save(cartObj);
+				return true;
+			}
+		} else {
+			updatedQuantity = cartObj.getQuantity() + 1;
+		}
+
+		cartObj.setQuantity(updatedQuantity);
 		cartRepositoryObj.save(cartObj);
-		
+
 		return true;
 	}
 }
