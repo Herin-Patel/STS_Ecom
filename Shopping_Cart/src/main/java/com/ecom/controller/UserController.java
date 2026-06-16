@@ -73,12 +73,11 @@ public class UserController {
 
 		List<Cart> carts = cartServiceObj.getCartsByUser(user.getId());
 		pageModel.addAttribute("carts", carts);
-		
-		if (carts.size()>0) {
+
+		if (carts.size() > 0) {
 			Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
 			pageModel.addAttribute("totalOrderPrice", totalOrderPrice);
 		}
-		
 
 		return "/user/cart";
 	}
@@ -101,5 +100,10 @@ public class UserController {
 		}
 
 		return "redirect:/user/cart";
+	}
+
+	@GetMapping("/orders")
+	public String orderPage() {
+		return "/user/order";
 	}
 }
