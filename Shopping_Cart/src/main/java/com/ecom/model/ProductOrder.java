@@ -2,11 +2,13 @@ package com.ecom.model;
 
 import java.util.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 //import lombok.Getter;
@@ -40,6 +42,9 @@ public class ProductOrder {
 
 	@ManyToOne
 	private UserDtls user;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	private OrderAddress orderAddress;
 
 	// All Getter Methods
 
@@ -79,6 +84,10 @@ public class ProductOrder {
 		return this.user;
 	}
 
+	public OrderAddress getOrderAddress() {
+		return this.orderAddress;
+	}
+
 	// All Setter Methods
 
 	public void setId(int id) {
@@ -115,5 +124,9 @@ public class ProductOrder {
 
 	public void setUserDtls(UserDtls user) {
 		this.user = user;
+	}
+
+	public void setOrderAddress(OrderAddress orderAddress) {
+		this.orderAddress = orderAddress;
 	}
 }
