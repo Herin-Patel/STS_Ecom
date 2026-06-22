@@ -14,10 +14,12 @@
 		<div class="container mt-5 p-5">
 			<!-- Here, mt-5 means margin top = 5 and p-5 means padding = 5 -->
 
-			<div class="row">
+			<form action="/user/save-order" method="post">
 
-				<div class="col-md-6">
-					<form>
+				<div class="row">
+
+					<div class="col-md-6">
+						<!--<form>-->
 						<div class="mb-3 row">
 							<p class="text-center fs-4">
 								Fill Address
@@ -50,7 +52,7 @@
 								<label>
 									Mobile Number
 								</label>
-								<input type="number" name="mobileNumber" class="form-control mt-1">
+								<input type="number" name="mobileNo" class="form-control mt-1">
 							</div>
 						</div>
 
@@ -88,75 +90,79 @@
 							</div>
 						</div>
 
-					</form>
-				</div>
-
-
-				<!-- Seond Grid containing PAYMENT -->
-				<div class="col-md-6">
-
-					<p class="text-center fs-4">
-						Payment Type
-					</p>
-					<hr />
-
-					<div class="card">
-						<div class="card-body">
-							<table class="table table-borderless">
-								<tbody>
-									<tr>
-										<td>Total Price</td>
-										<td>:</td>
-										<td> &#8377; 777</td>
-									</tr>
-
-									<tr>
-										<td>Delivery Fee</td>
-										<td>:</td>
-										<td> &#8377; 250</td>
-									</tr>
-
-									<tr>
-										<td>Tax</td>
-										<td>:</td>
-										<td> &#8377; 100</td>
-									</tr>
-
-
-									<tr class="border-top">
-										<td>Total Price</td>
-										<td>:</td>
-										<td> &#8377; 100000</td>
-									</tr>
-								</tbody>
-
-							</table>
-						</div>
+						<!--</form>-->
 					</div>
 
-					<div class="card shadow p-3 mb-5 mt-2 bg-body-tertiary rounded">
 
-						<div class="card-body">
-							<form action="/login" method="post">
+
+
+					<!-- Seond Grid containing PAYMENT -->
+					<div class="col-md-6">
+
+						<p class="text-center fs-4">
+							Payment Type
+						</p>
+						<hr />
+
+						<div class="card">
+							<div class="card-body">
+								<table class="table table-borderless">
+									<tbody>
+										<tr>
+											<td>Total Price</td>
+											<td>:</td>
+											<td> &#8377; 777</td>
+										</tr>
+
+										<tr>
+											<td>Delivery Fee</td>
+											<td>:</td>
+											<td> &#8377; 250</td>
+										</tr>
+
+										<tr>
+											<td>Tax</td>
+											<td>:</td>
+											<td> &#8377; 100</td>
+										</tr>
+
+
+										<tr class="border-top">
+											<td>Total Price</td>
+											<td>:</td>
+											<td> &#8377; 100000</td>
+										</tr>
+									</tbody>
+
+								</table>
+							</div>
+						</div>
+
+						<div class="card shadow p-3 mb-5 mt-2 bg-body-tertiary rounded">
+
+							<div class="card-body">
+								<!--<form action="/login" method="post">-->
 								<div class="mb-3">
 									<label class="form-label">
 										Select Payment Type
 									</label>
-									<select class="form-control">
+									<select class="form-control" name="paymentType">
 										<option>-- Select --</option>
-										<option>Cash On Delivery</option>
-										<option>Online Payment</option>
+										<option value="COD">Cash On Delivery</option>
+										<option value="ONLINE">Online Payment</option>
 									</select>
 
 								</div>
 
-								<button type="submit" class="btn bg-primary text-white col-md-12">Place Order</button>
-							</form>
+								<button class="btn bg-primary text-white col-md-12">Place Order</button>
+								<!--</form>-->
+							</div>
+
 						</div>
 
 					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 
 	</section>

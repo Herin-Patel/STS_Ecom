@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ecom.model.Cart;
+import com.ecom.model.OrderAddress;
 import com.ecom.model.OrderRequest;
 import com.ecom.model.ProductOrder;
 import com.ecom.repository.CartRepository;
 import com.ecom.repository.ProductOrderRepository;
 import com.ecom.service.OrderService;
+import com.ecom.util.OrderStatus;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -24,7 +26,7 @@ public class OrderServiceImpl implements OrderService {
 	private CartRepository cartRepository;
 
 	@Override
-	public ProductOrder saveOrder(Integer userId, OrderRequest orderRequest) {
+	public void saveOrder(Integer userId, OrderRequest orderRequest) {
 
 		List<Cart> carts = cartRepository.findByUserId(userId);
 
@@ -38,9 +40,23 @@ public class OrderServiceImpl implements OrderService {
 			order.setPrice(cart.getProduct().getDiscountPrice());
 			order.setQuantity(cart.getQuantity());
 			order.setUserDtls(cart.getUser());
-			order.setStatus("In Progress);
-		}
+			order.setStatus(OrderStatus.IN_PROGRESS.name());
 
-		return null;
+			order.setPaymentType(orderRequest.getPaymentType());
+
+			OrderAddress address = new OrderAddress();
+			address.setFirstName(orderRequest.getFirstName());
+			address.setLastName(orderRequest.getLastName());
+			address.setEmail(orderRequest.getEmail());
+			address.setMobileNo(orderRequest.getMobileNo());
+			address.setAddress(orderRequest.getAddress());
+			address.setCity(orderRequest.getCity());
+			address.setState(orderRequest.getState());
+			address.setPincode(orderRequest.getPincode());
+
+			order.setOrderAddress(address);
+
+			orderRepository.save(order);
+		}
 	}
 }
