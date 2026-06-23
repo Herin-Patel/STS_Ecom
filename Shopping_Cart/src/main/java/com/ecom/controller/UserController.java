@@ -109,7 +109,17 @@ public class UserController {
 	}
 
 	@GetMapping("/orders")
-	public String orderPage() {
+	public String orderPage(Principal p, Model pageModel) {
+		UserDtls user = getLoggedInUserDetails(p);
+
+		List<Cart> carts = cartServiceObj.getCartsByUser(user.getId());
+		pageModel.addAttribute("carts", carts);
+
+		if (carts.size() > 0) {
+			Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
+			pageModel.addAttribute("totalOrderPrice", totalOrderPrice);
+		}
+		
 		return "/user/order";
 	}
 

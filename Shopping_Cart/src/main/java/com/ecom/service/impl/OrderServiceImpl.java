@@ -40,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
 			order.setPrice(cart.getProduct().getDiscountPrice());
 			order.setQuantity(cart.getQuantity());
 			order.setUserDtls(cart.getUser());
-			order.setStatus(OrderStatus.IN_PROGRESS.name());
+			order.setStatus(OrderStatus.IN_PROGRESS.getName());
 
 			order.setPaymentType(orderRequest.getPaymentType());
 
