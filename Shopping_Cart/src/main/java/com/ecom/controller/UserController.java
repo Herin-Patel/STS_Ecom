@@ -116,10 +116,13 @@ public class UserController {
 		pageModel.addAttribute("carts", carts);
 
 		if (carts.size() > 0) {
-			Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
+			Double orderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
+			Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice() + 250 + 100;
+
+			pageModel.addAttribute("orderPrice", orderPrice);
 			pageModel.addAttribute("totalOrderPrice", totalOrderPrice);
 		}
-		
+
 		return "/user/order";
 	}
 
@@ -131,6 +134,11 @@ public class UserController {
 
 		orderServiceObj.saveOrder(currentUserDtls.getId(), request);
 
+		return "redirect:/user/success";
+	}
+	
+	@GetMapping("/success")
+	public String loadSuccess() {
 		return "/user/success";
 	}
 }
