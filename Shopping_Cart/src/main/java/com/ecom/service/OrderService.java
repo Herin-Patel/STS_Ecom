@@ -11,4 +11,6 @@ public interface OrderService {
 	public List<ProductOrder> getOrderByUser(Integer userId);
 
 	public Boolean updateOrderStatus(Integer orderId, String orderStatus);
+
+	public List<ProductOrder> getAllOrders();
 }

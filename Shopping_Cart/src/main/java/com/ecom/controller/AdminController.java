@@ -2,11 +2,14 @@ package com.ecom.controller;
 
 import com.ecom.model.Category;
 import com.ecom.model.Product;
+import com.ecom.model.ProductOrder;
 import com.ecom.model.UserDtls;
 import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
+import com.ecom.service.OrderService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
+import com.ecom.util.OrderStatus;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -46,6 +49,9 @@ public class AdminController {
 
 	@Autowired
 	private CartService cartServiceObj;
+
+	@Autowired
+	private OrderService orderServiceObj;
 
 	@GetMapping("/")
 	public String index() {
@@ -316,5 +322,39 @@ public class AdminController {
 		}
 
 		return "redirect:/admin/users";
+	}
+
+	@GetMapping("/orders")
+	public String getAllOrders(Model pageModel) {
+		List<ProductOrder> allOrders = orderServiceObj.getAllOrders();
+
+		pageModel.addAttribute("allOrders", allOrders);
+
+		return "admin/orders";
+	}
+
+	@PostMapping("/update-order-status")
+	public String updateOrderStatus(@RequestParam Integer orderId, @RequestParam Integer orderStatus,
+			HttpSession session) {
+
+		OrderStatus[] values = OrderStatus.values();
+		String status = null;
+
+		for (OrderStatus orderSt : values) {
+			if (orderSt.getId().equals(orderStatus)) {
+				status = orderSt.getName();
+			}
+		}
+		// System.out.println("Values : " + values);
+
+		Boolean updateOrder = orderServiceObj.updateOrderStatus(orderId, status);
+
+		if (updateOrder) {
+			session.setAttribute("successMssg", "Order status updated");
+		} else {
+			session.setAttribute("errorMssg", "Order status not updated. Something went wrong !");
+		}
+
+		return "redirect:/admin/orders";
 	}
 }

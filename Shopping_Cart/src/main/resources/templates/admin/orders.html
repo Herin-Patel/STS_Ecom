@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>
+		Insert title here
+	</title>
+</head>
+
+<body>
+	<section>
+
+		<div class="container-fluid mt-5 p-2">
+			<!-- Here, mt-5 means margin top = 5 and p-5 means padding = 5 -->
+
+			<div class="row">
+
+				<p class="text-center fs-3 mt-2">
+					All Orders
+				</p>
+				<hr>
+
+				<!-- Http Session Message -->
+				<th:block th:if="${session.successMssg}">
+					<p class="text-success fw-bold text-center">
+						[[${session.successMssg}]]
+					</p>
+					<th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+
+				<th:block th:if="${session.errorMssg}">
+					<p class="text-danger fw-bold text-center">
+						[[${session.errorMssg}]]
+					</p>
+					<th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+				<!-- Ends here-->
+
+				<div class="col-md-4 p-3 pe-3">
+					<form>
+						<div class="row">
+							<div class="col">
+								<input type="text" class="form-control" name="" placeholder="Enter orderId">
+							</div>
+							<div class="col">
+								<button class="btn btn-primary">
+									Search
+								</button>
+							</div>
+
+						</div>
+					</form>
+				</div>
+
+				<div class="col-md-12 p-3">
+
+					<table class="table table-ordered card-sh">
+						<thead>
+							<tr>
+								<th scope="col">Order Id</th>
+								<th scope="col">Delivery Details</th>
+								<th scope="col">Date</th>
+								<th scope="col">Product Details</th>
+								<th scope="col">Quantity</th>
+								<th scope="col">Price</th>
+								<th scope="col">Status</th>
+								<th scope="col">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="order:${allOrders}">
+								<th scope="row">[[${order.orderId}]]</th>
+								<td>Name : [[${order.orderAddress.firstName} + ' ' + ${order.orderAddress.lastName}]]
+									<br>
+									Email : [[${order.orderAddress.email}]] <br>
+									Mobno : [[${order.orderAddress.mobileNo}]] <br>
+									Address : [[${order.orderAddress.address}]] <br>
+									City : [[${order.orderAddress.city}]] <br>
+									State : [[${order.orderAddress.state}]] <br>
+									Pincode : [[${order.orderAddress.pincode}]]
+
+								</td>
+								<td>[[${order.orderDate}]]</td>
+								<td>[[${order.product.title}]]</td>
+								<td>[[${order.quantity}]]</td>
+								<td>Price : [[${order.price}]]
+									<br>Total Price : [[${order.quantity}]] * [[${order.price}]] = [[${order.quantity *
+									order.price}]]
+								</td>
+								<td>[[${order.status}]]</td>
+								<td>
+
+									<form action="/admin/update-order-status" method="post">
+										<div class="row">
+											<div class="col">
+												<select class="form-control" name="orderStatus">
+													<option>
+														-- Select --
+													</option>
+													<option value="1">
+														In Progress
+													</option>
+													<option value="2">
+														Order Received
+													</option>
+													<option value="3">
+														Product Packed
+													</option>
+													<option value="4">
+														Out for Delivery
+													</option>
+													<option value="5">
+														Delivered
+													</option>
+													<option value="6">
+														Cancelled
+													</option>
+												</select>
+											</div>
+											<input value="${order.id}" name="orderId" type="hidden">
+											<div class="col">
+												<button class="btn btn-primary">
+													Update
+												</button>
+											</div>
+
+										</div>
+									</form>
+
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</section>
+</body>
+
+</html>
