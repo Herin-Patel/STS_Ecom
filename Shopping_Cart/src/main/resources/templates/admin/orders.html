@@ -20,6 +20,15 @@
 					All Orders
 				</p>
 				<hr>
+				<div class="row">
+					<div class="col-md-5">
+						<a href="/admin/" class="btn btn-warning">
+							<i class="fa-solid fa-arrow-right-from-bracket"></i>
+							Back
+						</a>
+					</div>
+				</div>
+
 
 				<!-- Http Session Message -->
 				<th:block th:if="${session.successMssg}">
@@ -118,11 +127,22 @@
 													</option>
 												</select>
 											</div>
-											<input value="${order.id}" name="orderId" type="hidden">
+											<input th:value="${order.id}" name="orderId" type="hidden">
 											<div class="col">
-												<button class="btn btn-primary">
-													Update
-												</button>
+
+												<th:block
+													th:if="${order.status=='Cancelled' || order.status=='Order Delivered'}">
+													<button class="btn btn-danger disabled">
+														Update
+													</button>
+												</th:block>
+												<th:block
+													th:unless="${order.status=='Cancelled' || order.status=='Order Delivered'}">
+													<button class="btn btn-warning">
+														Update
+													</button>
+												</th:block>
+
 											</div>
 
 										</div>
