@@ -22,6 +22,7 @@ import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
 import com.ecom.service.OrderService;
 import com.ecom.service.UserService;
+import com.ecom.util.CommonUtil;
 import com.ecom.util.OrderStatus;
 
 import jakarta.servlet.http.HttpSession;
@@ -41,6 +42,9 @@ public class UserController {
 
 	@Autowired
 	private OrderService orderServiceObj;
+
+	@Autowired
+	private CommonUtil commonUtilObj;
 
 	@GetMapping("/")
 	public String home() {
@@ -129,7 +133,7 @@ public class UserController {
 	}
 
 	@PostMapping("/save-order")
-	public String saveOrder(@ModelAttribute OrderRequest request, Principal p) {
+	public String saveOrder(@ModelAttribute OrderRequest request, Principal p) throws Exception {
 		// System.out.println(request);
 
 		UserDtls currentUserDtls = getLoggedInUserDetails(p);
@@ -170,12 +174,18 @@ public class UserController {
 		}
 		// System.out.println("Values : " + values);
 
-		Boolean updateOrder = orderServiceObj.updateOrderStatus(orderId, status);
+		ProductOrder updatedOrder = orderServiceObj.updateOrderStatus(orderId, status);
+		try {
+			commonUtilObj.sendMailForProductOrder(updatedOrder, status);
+		} catch (Exception expObj) {
+			expObj.printStackTrace();
+			session.setAttribute("errorMssg", "Failed to send Order status on registered email");
+		}
 
-		if (updateOrder) {
-			session.setAttribute("successMssg", "Order status updated");
-		} else {
+		if (ObjectUtils.isEmpty(updatedOrder)) {
 			session.setAttribute("errorMssg", "Order status not updated. Something went wrong !");
+		} else {
+			session.setAttribute("successMssg", "Order status updated");
 		}
 
 		return "redirect:/user/user-orders";

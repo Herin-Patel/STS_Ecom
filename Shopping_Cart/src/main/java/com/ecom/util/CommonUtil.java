@@ -32,7 +32,7 @@ public class CommonUtil {
 
 		helper.setFrom("herrypatel7290@gmail.com", "Shopping Cart");
 		helper.setTo(recipientMail);
-		helper.setSubject("Password Reset");
+		helper.setSubject("Shopping Cart : Password Reset");
 		helper.setText(content, true);
 		mailSender.send(message);
 
@@ -47,7 +47,8 @@ public class CommonUtil {
 		return siteUrl.replace(request.getServletPath(), "");
 	}
 	
-	String orderContent = "<p>Thank you, your order has been placed successfully.</p>"
+	String orderContent = "<p>Hi, [[name]]</p>"
+				  + "<p>Thank you, your order is <b>[[orderStatus]]</b>.</p><br>"
 				  + "<p>Product Details :- </p>"
 				  + "<p>Name : [[productName]] </p>"
 				  + "<p>Category : [[category]] </p>"
@@ -56,10 +57,12 @@ public class CommonUtil {
 				  + "<p>Payment Type : [[paymentType]] </p>";
 			
 
-	public Boolean sendMailForProductOrder(ProductOrder order) throws Exception, MessagingException {
+	public Boolean sendMailForProductOrder(ProductOrder order, String orderStatus) throws Exception, MessagingException {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
-
+	
+		orderContent = orderContent.replace("[[name]]", order.getOrderAddress().getFirstName());
+		orderContent = orderContent.replace("[[orderStatus]]", orderStatus);
 		orderContent = orderContent.replace("[[productName]]", order.getProduct().getTitle());
 		orderContent = orderContent.replace("[[category]]", order.getProduct().getCategory());
 		orderContent = orderContent.replace("[[quantity]]", Integer.toString(order.getQuantity()));
@@ -68,10 +71,15 @@ public class CommonUtil {
 
 		helper.setFrom("herrypatel7290@gmail.com", "Shopping Cart");
 		helper.setTo(order.getOrderAddress().getEmail());
-		helper.setSubject("Product Order Status");
+		helper.setSubject("Shopping Cart : Product Order Status");
 		helper.setText(orderContent, true);
-		mailSender.send(message);
+		try {
+			mailSender.send(message);
+		} catch (Exception expObj) {
+			expObj.printStackTrace();
+			return false;
+		}
 
-		return false;
+		return true;
 	}
 }

@@ -9,6 +9,7 @@ import com.ecom.service.CategoryService;
 import com.ecom.service.OrderService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
+import com.ecom.util.CommonUtil;
 import com.ecom.util.OrderStatus;
 
 import jakarta.servlet.http.HttpSession;
@@ -52,6 +53,9 @@ public class AdminController {
 
 	@Autowired
 	private OrderService orderServiceObj;
+
+	@Autowired
+	private CommonUtil commonUtilObj;
 
 	@GetMapping("/")
 	public String index() {
@@ -347,12 +351,19 @@ public class AdminController {
 		}
 		// System.out.println("Values : " + values);
 
-		Boolean updateOrder = orderServiceObj.updateOrderStatus(orderId, status);
+		ProductOrder updatedOrder = orderServiceObj.updateOrderStatus(orderId, status);
 
-		if (updateOrder) {
-			session.setAttribute("successMssg", "Order status updated");
-		} else {
+		try {
+			commonUtilObj.sendMailForProductOrder(updatedOrder, status);
+		} catch (Exception expObj) {
+			expObj.printStackTrace();
+			session.setAttribute("errorMssg", "Failed to send Order status on registered email");
+		}
+
+		if (ObjectUtils.isEmpty(updatedOrder)) {
 			session.setAttribute("errorMssg", "Order status not updated. Something went wrong !");
+		} else {
+			session.setAttribute("successMssg", "Order status updated");
 		}
 
 		return "redirect:/admin/orders";
