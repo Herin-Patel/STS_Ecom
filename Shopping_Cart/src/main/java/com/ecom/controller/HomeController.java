@@ -112,8 +112,8 @@ public class HomeController {
 	}
 
 	@PostMapping("/saveUser")
-	public String saveUser(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file, HttpSession session)
-			throws IOException {
+	public String saveUser(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file,
+			HttpSession session) {
 
 		String imageName = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
 		user.setProfileImage(imageName);
@@ -141,7 +141,11 @@ public class HomeController {
 					dir.mkdirs();
 
 				Path filePath = Paths.get(uploadDir + imageName);
-				Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+				try {
+					Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			session.setAttribute("successMssg", "Registered successfully");
 		} else {

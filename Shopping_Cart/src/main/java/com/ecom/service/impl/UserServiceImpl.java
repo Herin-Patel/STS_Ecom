@@ -6,7 +6,15 @@ import com.ecom.util.AppConstant;
 import com.ecom.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -113,5 +121,59 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDtls updateUser(UserDtls user) {
 		return userRepositoryObj.save(user);
+	}
+
+	@Override
+	public UserDtls updateUserProfile(UserDtls user, MultipartFile imageFile) {
+
+		UserDtls currentUser = userRepositoryObj.findById(user.getId()).get();
+
+		if (!imageFile.isEmpty()) {
+			currentUser.setProfileImage(imageFile.getOriginalFilename());
+		}
+
+		if (!ObjectUtils.isEmpty(currentUser)) {
+			currentUser.setName(user.getName());
+			currentUser.setMobileNumber(user.getMobileNumber());
+			currentUser.setAddress(user.getAddress());
+			currentUser.setCity(user.getCity());
+			currentUser.setState(user.getState());
+			currentUser.setPincode(user.getPincode());
+
+			currentUser = userRepositoryObj.save(currentUser);
+		}
+
+		try {
+			if (!imageFile.isEmpty()) {
+				/*
+				 * File saveFile = new ClassPathResource("static/img").getFile();
+				 * 
+				 * Path path = Paths.get(saveFile.getAbsolutePath() + File.separator +
+				 * "profile_img" + File.separator + file.getOriginalFilename());
+				 * 
+				 * // System.out.println(path); Files.copy(file.getInputStream(), path,
+				 * StandardCopyOption.REPLACE_EXISTING);
+				 */
+
+				// Save image to folder
+				String uploadDir = "C:/Users/herry/Desktop/STS_Workspace/Shopping_Cart/src/main/resources/static/img/profile_img/";
+				// "C:\\Users\\herry\\Desktop\\STS_Workspace\\Shopping_Cart\\src\\main\\resources\\static\\img\\category_img"
+
+				File dir = new File(uploadDir);
+				if (!dir.exists())
+					dir.mkdirs();
+
+				String imageName = imageFile.getOriginalFilename();
+				Path filePath = Paths.get(uploadDir + imageName);
+
+				Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+			}
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }
