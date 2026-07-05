@@ -47,7 +47,12 @@ public class CommonUtil {
 		return siteUrl.replace(request.getServletPath(), "");
 	}
 	
-	String orderContent = "<p>Hi, [[name]]</p>"
+	
+	public Boolean sendMailForProductOrder(ProductOrder order, String orderStatus) throws Exception, MessagingException {
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		
+		String orderContent = "<p>Hello , [[name]]</p>"
 				  + "<p>Thank you, your order is <b>[[orderStatus]]</b>.</p><br>"
 				  + "<p>Product Details :- </p>"
 				  + "<p>Name : [[productName]] </p>"
@@ -55,11 +60,6 @@ public class CommonUtil {
 				  + "<p>Quantity : [[quantity]] </p>"
 				  + "<p>Price : [[price]] </p>"
 				  + "<p>Payment Type : [[paymentType]] </p>";
-			
-
-	public Boolean sendMailForProductOrder(ProductOrder order, String orderStatus) throws Exception, MessagingException {
-		MimeMessage message = mailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message);
 	
 		orderContent = orderContent.replace("[[name]]", order.getOrderAddress().getFirstName());
 		orderContent = orderContent.replace("[[orderStatus]]", orderStatus);
