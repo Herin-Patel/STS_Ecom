@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import com.ecom.model.Cart;
 import com.ecom.model.OrderAddress;
@@ -94,5 +95,16 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<ProductOrder> getAllOrders() {
 		return orderRepositoryObj.findAll();
+	}
+
+	@Override
+	public ProductOrder getOrderByOrderId(String orderId) {
+		ProductOrder foundOrder = orderRepositoryObj.findByOrderId(orderId);
+
+		if (ObjectUtils.isEmpty(foundOrder)) {
+			return null;
+		}
+
+		return foundOrder;
 	}
 }

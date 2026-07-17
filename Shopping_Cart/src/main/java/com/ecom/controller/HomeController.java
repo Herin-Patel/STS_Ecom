@@ -224,4 +224,21 @@ public class HomeController {
 			return "message";
 		}
 	}
+
+	@GetMapping("/search-product")
+	public String searchProduct(@RequestParam String ch, Model pageModel) {
+
+		List<Product> searchedProduct = productServiceObj.searchProduct(ch);
+		List<Category> activeCategories = categoryServiceObj.getAllActiveCategory();
+		
+		if (ObjectUtils.isEmpty(searchedProduct)) {
+			// What if no products are available with the User suggestion. Then how to display no product available
+		}
+
+		
+		pageModel.addAttribute("categories", activeCategories);
+		pageModel.addAttribute("products", searchedProduct);
+
+		return "product";
+	}
 }

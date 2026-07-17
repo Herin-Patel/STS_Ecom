@@ -128,10 +128,6 @@ public class UserServiceImpl implements UserService {
 
 		UserDtls currentUser = userRepositoryObj.findById(user.getId()).get();
 
-		if (!imageFile.isEmpty()) {
-			currentUser.setProfileImage(imageFile.getOriginalFilename());
-		}
-
 		if (!ObjectUtils.isEmpty(currentUser)) {
 			currentUser.setName(user.getName());
 			currentUser.setMobileNumber(user.getMobileNumber());
@@ -145,6 +141,9 @@ public class UserServiceImpl implements UserService {
 
 		try {
 			if (!imageFile.isEmpty()) {
+				
+				currentUser.setProfileImage(imageFile.getOriginalFilename());
+				
 				/*
 				 * File saveFile = new ClassPathResource("static/img").getFile();
 				 * 
@@ -166,14 +165,15 @@ public class UserServiceImpl implements UserService {
 				String imageName = imageFile.getOriginalFilename();
 				Path filePath = Paths.get(uploadDir + imageName);
 
-				Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
+				Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);	
 			}
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+			
+			return null;
 		}
 
-		return null;
+		return currentUser;
 	}
 }

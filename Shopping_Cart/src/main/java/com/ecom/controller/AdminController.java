@@ -12,6 +12,7 @@ import com.ecom.service.UserService;
 import com.ecom.util.CommonUtil;
 import com.ecom.util.OrderStatus;
 
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -333,6 +334,7 @@ public class AdminController {
 		List<ProductOrder> allOrders = orderServiceObj.getAllOrders();
 
 		pageModel.addAttribute("allOrders", allOrders);
+		pageModel.addAttribute("orderSearched", false);
 
 		return "admin/orders";
 	}
@@ -367,5 +369,30 @@ public class AdminController {
 		}
 
 		return "redirect:/admin/orders";
+	}
+
+	@GetMapping("/search-order")
+	public String searchOrder(@RequestParam String orderId, Model pageModel, HttpSession session) {
+
+		if (orderId != null && orderId.length() > 0) {
+			ProductOrder searchedOrder = orderServiceObj.getOrderByOrderId(orderId.trim());
+
+			if (ObjectUtils.isEmpty(searchedOrder)) {
+				session.setAttribute("errorMssg", "Not order with such OrderId");
+			} else {
+				pageModel.addAttribute("order", searchedOrder);
+			}
+
+			pageModel.addAttribute("orderSearched", true);
+		} else {
+			List<ProductOrder> allOrders = orderServiceObj.getAllOrders();
+
+			pageModel.addAttribute("allOrders", allOrders);
+			pageModel.addAttribute("orderSearched", false);
+
+			return "redirect:/admin/orders";
+		}
+
+		return "/admin/orders";
 	}
 }

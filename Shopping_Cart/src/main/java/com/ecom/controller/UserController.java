@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -47,6 +48,9 @@ public class UserController {
 	@Autowired
 	private CommonUtil commonUtilObj;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@GetMapping("/")
 	public String home() {
 		return "user/home";
@@ -57,7 +61,7 @@ public class UserController {
 		if (p != null) {
 			// String email = p.getName();
 			// UserDtls userDtls = userServiceObj.getUserByEmail(email);
-			
+
 			UserDtls userDtls = getLoggedInUserDetails(p);
 
 			pageModel.addAttribute("user", userDtls);
@@ -202,11 +206,45 @@ public class UserController {
 	public String viewProfile() {
 		return "/user/profile";
 	}
-	
+
 	@PostMapping("/update-profile")
-	public String updateProfile(@ModelAttribute UserDtls user, @RequestParam MultipartFile imageFile) {
-		
-		userServiceObj.updateUserProfile(user, imageFile);
+	public String updateProfile(@ModelAttribute UserDtls user, @RequestParam MultipartFile imageFile,
+			HttpSession session) {
+
+		UserDtls updatedUserProfile = userServiceObj.updateUserProfile(user, imageFile);
+
+		if (ObjectUtils.isEmpty(updatedUserProfile)) {
+			session.setAttribute("errorMssg", "Profile not updated. Something went wrong !");
+		} else {
+			session.setAttribute("successMssg", "Profile updated successfully");
+		}
+
+		return "redirect:/user/profile";
+	}
+
+	@PostMapping("/change-password")
+	public String changePassword(@RequestParam String newPassword, @RequestParam String currentPassword, Principal p,
+			HttpSession session) {
+
+		UserDtls loggedInUserDetails = getLoggedInUserDetails(p);
+
+		boolean passwordMatch = passwordEncoder.matches(currentPassword, loggedInUserDetails.getPassword());
+
+		if (passwordMatch) {
+			String encodedPassword = passwordEncoder.encode(newPassword);
+			loggedInUserDetails.setPassword(encodedPassword);
+
+			UserDtls updatedUser = userServiceObj.updateUser(loggedInUserDetails);
+			if (ObjectUtils.isEmpty(updatedUser)) {
+				session.setAttribute("errorMssg", "Password not updated ! Something went wrong on Server.");
+			} else {
+				session.setAttribute("successMssg", "Password updated successfully.");
+			}
+
+		} else {
+			session.setAttribute("errorMssg", "Current Password incorrect !");
+		}
+
 		return "redirect:/user/profile";
 	}
 }

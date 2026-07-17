@@ -112,4 +112,17 @@ public class ProductServiceImpl implements ProductService {
 
 		return activeProducts;
 	}
+
+	@Override
+	public List<Product> searchProduct(String ch) {
+
+		List<Product> foundProducts = productRepositoryObj
+				.findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch, ch);
+
+		if (ObjectUtils.isEmpty(foundProducts)) {
+			return null;
+		}
+
+		return foundProducts;
+	}
 }
