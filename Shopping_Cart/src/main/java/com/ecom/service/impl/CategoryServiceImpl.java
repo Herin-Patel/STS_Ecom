@@ -3,12 +3,16 @@ package com.ecom.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.ecom.model.Category;
 import com.ecom.repository.CategoryRepository;
 import com.ecom.service.CategoryService;
+
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -52,5 +56,12 @@ public class CategoryServiceImpl implements CategoryService {
 	public List<Category> getAllActiveCategory() {
 		List<Category> activeCategories = categoryRepositoryObj.findByIsActiveTrue();
 		return activeCategories;
+	}
+
+	@Override
+	public Page<Category> getAllCategoryPagination(Integer pageNumber, Integer pageSize) {
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Page<Category> pageProduct = categoryRepositoryObj.findAll(pageable);
+		return pageProduct;
 	}
 }

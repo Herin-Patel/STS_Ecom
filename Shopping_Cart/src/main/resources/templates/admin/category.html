@@ -98,7 +98,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="cat, cStat : ${categorys}">
+									<tr th:each="cat, cStat : ${categories}">
 										<th scope="row">[[${cStat.count}]]</th>
 										<td>[[${cat.name}]]</td>
 										<!--<td>[[${cat.isActive}]]</td>-->
@@ -109,7 +109,8 @@
 										<td><img th:src="@{'/img/category_img/'+${cat.imageName}}" width="50px"
 												height="50px"></td>
 										<td>
-											<a th:href="@{'/admin/loadEditCategory/'+${cat.id}}" class="btn btn-primary btn-sm"><i
+											<a th:href="@{'/admin/loadEditCategory/'+${cat.id}}"
+												class="btn btn-primary btn-sm"><i
 													class="fa-duotone fa-solid fa-pen-to-square fa-1x"
 													style="--fa-secondary-color: rgb(0, 51, 114);"></i>Edit</a>
 											<a th:href="@{'/admin/deleteCategory/'+${cat.id}}"
@@ -120,6 +121,45 @@
 									</tr>
 								</tbody>
 							</table>
+
+
+							<!-- Start Pagination -->
+
+							<div class="row">
+								<div class="col-md-4">
+									Total Categories : [[${totalElements}]]
+								</div>
+								<div class="col-md-6">
+									<th:block th:if="${categorySize}>0">
+										<nav aria-label="Page navigation example">
+											<ul class="pagination">
+												<li class="page-item" th:classappend="${isFirst} ? 'disabled' : ''">
+													<a class="page-link"
+														th:href="@{'/admin/category?pageNumber='+${pageNumber-1}}">
+														Previous
+													</a>
+												</li>
+
+												<li class="page-item" th:each="i:${#numbers.sequence(1, totalPages)}"
+													th:classappend="${pageNumber+1 == i} ? 'active' : ''">
+													<a class="page-link"
+														th:href="@{'/admin/category?pageNumber='+${i-1}}">
+														[[${i}]]
+													</a>
+												</li>
+												<li class="page-item" th:classappend="${isLast} ? 'disabled' : ''">
+													<a class="page-link"
+														th:href="@{'/admin/category?pageNumber='+${pageNumber+1}}">
+														Next
+													</a>
+												</li>
+											</ul>
+										</nav>
+									</th:block>
+								</div>
+							</div>
+
+
 						</div>
 					</div>
 				</div>

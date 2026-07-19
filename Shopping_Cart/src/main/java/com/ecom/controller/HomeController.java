@@ -108,9 +108,9 @@ public class HomeController {
 		// pageModel.addAttribute("products", activeProducts);
 
 		Page<Product> page = productServiceObj.getAllActiveProductPagination(pageNumber, pageSize, category);
-		List<Product> products = page.getContent();
-		pageModel.addAttribute("products", products);
-		pageModel.addAttribute("productSize", products.size());
+		List<Product> productList = page.getContent();
+		pageModel.addAttribute("products", productList);
+		pageModel.addAttribute("productSize", productList.size());
 		pageModel.addAttribute("pageNumber", page.getNumber());
 		pageModel.addAttribute("pageSize", pageSize);
 		pageModel.addAttribute("totalElements", page.getTotalElements());

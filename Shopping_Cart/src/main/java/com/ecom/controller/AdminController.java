@@ -27,6 +27,7 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,8 +73,22 @@ public class AdminController {
 	}
 
 	@GetMapping("/category")
-	public String category(Model pageModel) {
-		pageModel.addAttribute("categorys", categoryServiceObj.getAllCategory());
+	public String category(Model pageModel, @RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+			@RequestParam(name = "pageSize", defaultValue = "3") Integer pageSize) {
+		// pageModel.addAttribute("categories", categoryServiceObj.getAllCategory());
+
+		Page<Category> page = categoryServiceObj.getAllCategoryPagination(pageNumber, pageSize);
+		List<Category> categoryList = page.getContent();
+
+		pageModel.addAttribute("categories", categoryList);
+		pageModel.addAttribute("categorySize", categoryList.size());
+		pageModel.addAttribute("pageNumber", page.getNumber());
+		pageModel.addAttribute("pageSize", pageSize);
+		pageModel.addAttribute("totalElements", page.getTotalElements());
+		pageModel.addAttribute("totalPages", page.getTotalPages());
+		pageModel.addAttribute("isFirst", page.isFirst());
+		pageModel.addAttribute("isLast", page.isLast());
+
 		return "admin/category";
 	}
 
