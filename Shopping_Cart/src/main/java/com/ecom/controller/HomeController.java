@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -93,14 +94,30 @@ public class HomeController {
 	 */
 
 	@GetMapping("/products")
-	public String products(Model pageModel, @RequestParam(value = "category", defaultValue = "") String category) {
+	public String products(Model pageModel, @RequestParam(value = "category", defaultValue = "") String category,
+			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+			@RequestParam(name = "pageSize", defaultValue = "9") Integer pageSize) {
+
 		System.out.println("category = " + category);
 		List<Category> activeCategories = categoryServiceObj.getAllActiveCategory();
-		List<Product> activeProducts = productServiceObj.getAllActiveProducts(category);
-
 		pageModel.addAttribute("categories", activeCategories);
-		pageModel.addAttribute("products", activeProducts);
 		pageModel.addAttribute("paramValue", category);
+
+		// List<Product> activeProducts =
+		// productServiceObj.getAllActiveProducts(category);
+		// pageModel.addAttribute("products", activeProducts);
+
+		Page<Product> page = productServiceObj.getAllActiveProductPagination(pageNumber, pageSize, category);
+		List<Product> products = page.getContent();
+		pageModel.addAttribute("products", products);
+		pageModel.addAttribute("productSize", products.size());
+		pageModel.addAttribute("pageNumber", page.getNumber());
+		pageModel.addAttribute("pageSize", pageSize);
+		pageModel.addAttribute("totalElements", page.getTotalElements());
+		pageModel.addAttribute("totalPages", page.getTotalPages());
+		pageModel.addAttribute("isFirst", page.isFirst());
+		pageModel.addAttribute("isLast", page.isLast());
+
 		return "product";
 	}
 
@@ -230,12 +247,12 @@ public class HomeController {
 
 		List<Product> searchedProduct = productServiceObj.searchProduct(ch);
 		List<Category> activeCategories = categoryServiceObj.getAllActiveCategory();
-		
+
 		if (ObjectUtils.isEmpty(searchedProduct)) {
-			// What if no products are available with the User suggestion. Then how to display no product available
+			// What if no products are available with the User suggestion. Then how to
+			// display no product available
 		}
 
-		
 		pageModel.addAttribute("categories", activeCategories);
 		pageModel.addAttribute("products", searchedProduct);
 

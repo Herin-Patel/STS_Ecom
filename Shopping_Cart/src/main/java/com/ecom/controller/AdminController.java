@@ -12,7 +12,6 @@ import com.ecom.service.UserService;
 import com.ecom.util.CommonUtil;
 import com.ecom.util.OrderStatus;
 
-import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -249,8 +248,23 @@ public class AdminController {
 	}
 
 	@GetMapping("/products")
-	public String loadViewProduct(Model pageModel) {
-		pageModel.addAttribute("products", productServiceObj.getAllProducts());
+	public String loadViewProduct(Model pageModel, @RequestParam(defaultValue = "") String productName) {
+
+		List<Product> productList = null;
+
+		if (productName != null && productName.length() > 0) {
+			productList = productServiceObj.searchProduct(productName);
+		} else {
+			productList = productServiceObj.getAllProducts();
+		}
+
+		if (ObjectUtils.isEmpty(productList)) {
+			// What if no products are available with the User suggestion. Then how to
+			// display no product available
+		}
+
+		pageModel.addAttribute("products", productList);
+
 		return "admin/products";
 	}
 

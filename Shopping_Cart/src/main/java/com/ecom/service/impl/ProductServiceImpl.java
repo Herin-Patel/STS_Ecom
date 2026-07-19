@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -15,6 +17,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -124,5 +128,20 @@ public class ProductServiceImpl implements ProductService {
 		}
 
 		return foundProducts;
+	}
+
+	@Override
+	public Page<Product> getAllActiveProductPagination(Integer pageNumber, Integer pageSize, String category) {
+
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Page<Product> pageProduct = null;
+
+		if (ObjectUtils.isEmpty(category)) {
+			pageProduct = productRepositoryObj.findByIsActiveTrue(pageable);
+		} else {
+			pageProduct = productRepositoryObj.findByCategory(pageable, category);
+		}
+
+		return pageProduct;
 	}
 }

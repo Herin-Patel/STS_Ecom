@@ -58,7 +58,7 @@
 
 							<div class="row">
 
-								<th:block th:if="${products.size}>0">
+								<th:block th:if="${productSize}>0">
 
 									<div class="col-md-3" th:each="p:${products}">
 										<div class="card">
@@ -92,7 +92,7 @@
 
 								</th:block>
 
-								<th:block th:unless="${products.size}>0">
+								<th:block th:unless="${productSize}>0">
 									<p class="fs-4 text-center mt-4 text-danger">
 										Product not available
 									</p>
@@ -101,7 +101,31 @@
 
 						</div>
 					</div>
+
+					<!-- Start Pagination -->
+
+					<div class="row">
+						<div class="col-md-4">
+							Total products : 2234
+						</div>
+						<div class="col-md-6">
+							<nav aria-label="...">
+								<ul class="pagination">
+									<li class="page-item"><a href="#" class="page-link">Previous</a></li>
+									<li class="page-item"><a class="page-link" href="#">1</a></li>
+									<li class="page-item active">
+										<a class="page-link" href="#" aria-current="page">2</a>
+									</li>
+									<li class="page-item"><a class="page-link" href="#">3</a></li>
+									<li class="page-item"><a class="page-link" href="#">Next</a></li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+
+
 				</div>
+
 			</div>
 		</div>
 	</section>
