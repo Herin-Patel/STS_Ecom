@@ -96,7 +96,7 @@ public class HomeController {
 	@GetMapping("/products")
 	public String products(Model pageModel, @RequestParam(value = "category", defaultValue = "") String category,
 			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
-			@RequestParam(name = "pageSize", defaultValue = "9") Integer pageSize) {
+			@RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize) {
 
 		System.out.println("category = " + category);
 		List<Category> activeCategories = categoryServiceObj.getAllActiveCategory();
