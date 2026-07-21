@@ -63,6 +63,10 @@ public class AdminController {
 		return "admin/index";
 	}
 
+	/****************************************
+	 * Add Product Section
+	 ****************************************/
+
 	@GetMapping("/loadAddProduct")
 	public String loadAddProduct(Model pageModel) {
 		List<Category> categories = categoryServiceObj.getAllCategory();
@@ -71,6 +75,10 @@ public class AdminController {
 
 		return "admin/add_product";
 	}
+
+	/****************************************
+	 * Add Category Section
+	 ****************************************/
 
 	@GetMapping("/category")
 	public String category(Model pageModel, @RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
@@ -214,6 +222,40 @@ public class AdminController {
 		return "redirect:/admin/loadEditCategory/" + category.getId();
 	}
 
+	/****************************************
+	 * View Product Section
+	 ****************************************/
+
+	@GetMapping("/products")
+	public String loadViewProduct(Model pageModel, @RequestParam(defaultValue = "") String productName,
+			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+			@RequestParam(name = "pageSize", defaultValue = "3") Integer pageSize) {
+
+		/*
+		 * List<Product> productList = null;
+		 * 
+		 * if (productName != null && productName.length() > 0) { productList =
+		 * productServiceObj.searchProduct(productName); } else { productList =
+		 * productServiceObj.getAllProducts(); }
+		 * 
+		 * if (ObjectUtils.isEmpty(productList)) { // What if no products are available
+		 * with the User suggestion. Then how to // display no product available }
+		 */
+
+		Page<Product> page = productServiceObj.getAllProducts(pageNumber, pageSize, productName);
+		List<Product> productList = page.getContent();
+		pageModel.addAttribute("products", productList);
+		pageModel.addAttribute("productSize", productList.size());
+		pageModel.addAttribute("pageNumber", page.getNumber());
+		pageModel.addAttribute("pageSize", pageSize);
+		pageModel.addAttribute("totalElements", page.getTotalElements());
+		pageModel.addAttribute("totalPages", page.getTotalPages());
+		pageModel.addAttribute("isFirst", page.isFirst());
+		pageModel.addAttribute("isLast", page.isLast());
+
+		return "admin/products";
+	}
+
 	@PostMapping("/saveProduct")
 	public String saveProduct(@ModelAttribute Product currentProduct, @RequestParam("file") MultipartFile file,
 			HttpSession session) {
@@ -262,29 +304,8 @@ public class AdminController {
 		return "redirect:/admin/loadAddProduct";
 	}
 
-	@GetMapping("/products")
-	public String loadViewProduct(Model pageModel, @RequestParam(defaultValue = "") String productName) {
-
-		List<Product> productList = null;
-
-		if (productName != null && productName.length() > 0) {
-			productList = productServiceObj.searchProduct(productName);
-		} else {
-			productList = productServiceObj.getAllProducts();
-		}
-
-		if (ObjectUtils.isEmpty(productList)) {
-			// What if no products are available with the User suggestion. Then how to
-			// display no product available
-		}
-
-		pageModel.addAttribute("products", productList);
-
-		return "admin/products";
-	}
-
 	@GetMapping("/deleteProduct/{id}")
-	public String loadViewProduct(@PathVariable int id, HttpSession session) {
+	public String deleteProduct(@PathVariable int id, HttpSession session) {
 		Boolean deletedProduct = productServiceObj.deleteProduct(id);
 
 		if (deletedProduct) {
@@ -322,41 +343,9 @@ public class AdminController {
 		return "redirect:/admin/editProduct/" + product.getId();
 	}
 
-	@ModelAttribute
-	public void getUserDetails(Principal p, Model pageModel) {
-		if (p != null) {
-			String email = p.getName();
-			UserDtls userDtls = userServiceObj.getUserByEmail(email);
-
-			pageModel.addAttribute("user", userDtls);
-
-			Integer userCartCount = cartServiceObj.getUserCartCount(userDtls.getId());
-			pageModel.addAttribute("userCartCount", userCartCount);
-		}
-
-		List<Category> allActiveCategory = categoryServiceObj.getAllActiveCategory();
-		pageModel.addAttribute("categorys", allActiveCategory);
-	}
-
-	@GetMapping("/users")
-	public String getAllUsers(Model pageModel) {
-		List<UserDtls> allUsers = userServiceObj.getUsers("ROLE_USER");
-		pageModel.addAttribute("users", allUsers);
-		return "admin/users";
-	}
-
-	@GetMapping("/updateStatus")
-	public String updateUserAccountStatus(@RequestParam Boolean status, @RequestParam Integer id, HttpSession session) {
-		Boolean value = userServiceObj.updateAccountStatus(id, status);
-
-		if (value) {
-			session.setAttribute("successMssg", "Account status has been updated.");
-		} else {
-			session.setAttribute("errorMssg", "Something went wrong on Server ! Account status not updated.");
-		}
-
-		return "redirect:/admin/users";
-	}
+	/****************************************
+	 * Manage Orders Section
+	 ****************************************/
 
 	@GetMapping("/orders")
 	public String getAllOrders(Model pageModel) {
@@ -424,4 +413,45 @@ public class AdminController {
 
 		return "/admin/orders";
 	}
+
+	/****************************************
+	 * Manage Users Section
+	 ****************************************/
+
+	@GetMapping("/users")
+	public String getAllUsers(Model pageModel) {
+		List<UserDtls> allUsers = userServiceObj.getUsers("ROLE_USER");
+		pageModel.addAttribute("users", allUsers);
+		return "admin/users";
+	}
+
+	@GetMapping("/updateStatus")
+	public String updateUserAccountStatus(@RequestParam Boolean status, @RequestParam Integer id, HttpSession session) {
+		Boolean value = userServiceObj.updateAccountStatus(id, status);
+
+		if (value) {
+			session.setAttribute("successMssg", "Account status has been updated.");
+		} else {
+			session.setAttribute("errorMssg", "Something went wrong on Server ! Account status not updated.");
+		}
+
+		return "redirect:/admin/users";
+	}
+
+	@ModelAttribute
+	public void getUserDetails(Principal p, Model pageModel) {
+		if (p != null) {
+			String email = p.getName();
+			UserDtls userDtls = userServiceObj.getUserByEmail(email);
+
+			pageModel.addAttribute("user", userDtls);
+
+			Integer userCartCount = cartServiceObj.getUserCartCount(userDtls.getId());
+			pageModel.addAttribute("userCartCount", userCartCount);
+		}
+
+		List<Category> allActiveCategory = categoryServiceObj.getAllActiveCategory();
+		pageModel.addAttribute("categorys", allActiveCategory);
+	}
+
 }
