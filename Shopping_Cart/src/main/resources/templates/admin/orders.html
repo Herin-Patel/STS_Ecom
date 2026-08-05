@@ -242,6 +242,41 @@
 						</tbody>
 					</table>
 				</div>
+
+				
+				<div class="row p-5">
+					<div class="col-md-5">
+						Total Orders : [[${totalElements}]]
+					</div>
+					<div class="col-md-6">
+						<th:block th:if="${orderSize}>0">
+							<nav aria-label="Page navigation example">
+								<ul class="pagination">
+									<li class="page-item" th:classappend="${isFirst} ? 'disabled' : ''">
+										<a class="page-link" th:href="@{'/admin/orders?pageNumber='+${pageNumber-1}}">
+											Previous
+										</a>
+									</li>
+
+									<li class="page-item" th:each="i:${#numbers.sequence(1, totalPages)}"
+										th:classappend="${pageNumber+1 == i} ? 'active' : ''">
+										<a class="page-link" th:href="@{'/admin/orders?pageNumber='+${i-1}}">
+											[[${i}]]
+										</a>
+									</li>
+
+									<li class="page-item" th:classappend="${isLast} ? 'disabled' : ''">
+										<a class="page-link" th:href="@{'/admin/orders?pageNumber='+${pageNumber+1}}">
+											Next
+										</a>
+									</li>
+								</ul>
+							</nav>
+						</th:block>
+					</div>
+				</div>
+
+				
 			</div>
 		</div>
 

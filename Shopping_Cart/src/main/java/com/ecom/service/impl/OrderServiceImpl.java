@@ -6,6 +6,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -68,11 +71,27 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	public List<ProductOrder> getAllOrders() {
+		return orderRepositoryObj.findAll();
+	}
+
+	@Override
 	public List<ProductOrder> getOrderByUser(Integer userId) {
 
 		List<ProductOrder> userOrders = orderRepositoryObj.findByUserId(userId);
 
 		return userOrders;
+	}
+
+	@Override
+	public ProductOrder getOrderByOrderId(String orderId) {
+		ProductOrder foundOrder = orderRepositoryObj.findByOrderId(orderId);
+
+		if (ObjectUtils.isEmpty(foundOrder)) {
+			return null;
+		}
+
+		return foundOrder;
 	}
 
 	@Override
@@ -93,18 +112,13 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<ProductOrder> getAllOrders() {
-		return orderRepositoryObj.findAll();
-	}
+	public Page<ProductOrder> getAllOrders(Integer pageNumber, Integer pageSize) {
 
-	@Override
-	public ProductOrder getOrderByOrderId(String orderId) {
-		ProductOrder foundOrder = orderRepositoryObj.findByOrderId(orderId);
+		Pageable pageableObj = PageRequest.of(pageNumber, pageSize);
+		Page<ProductOrder> pageOrder = null;
 
-		if (ObjectUtils.isEmpty(foundOrder)) {
-			return null;
-		}
+		pageOrder = orderRepositoryObj.findAll(pageableObj);
 
-		return foundOrder;
+		return pageOrder;
 	}
 }

@@ -348,11 +348,28 @@ public class AdminController {
 	 ****************************************/
 
 	@GetMapping("/orders")
-	public String getAllOrders(Model pageModel) {
-		List<ProductOrder> allOrders = orderServiceObj.getAllOrders();
+	public String getAllOrders(Model pageModel,
+			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+			@RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize) {
 
-		pageModel.addAttribute("allOrders", allOrders);
-		pageModel.addAttribute("orderSearched", false);
+		/*
+		 * List<ProductOrder> allOrders = orderServiceObj.getAllOrders();
+		 * 
+		 * pageModel.addAttribute("allOrders", allOrders);
+		 * pageModel.addAttribute("orderSearched", false);
+		 * 
+		 */
+
+		Page<ProductOrder> page = orderServiceObj.getAllOrders(pageNumber, pageSize);
+		List<ProductOrder> orderList = page.getContent();
+		pageModel.addAttribute("allOrders", orderList);
+		pageModel.addAttribute("orderSize", orderList.size());
+		pageModel.addAttribute("pageNumber", page.getNumber());
+		pageModel.addAttribute("pageSize", pageSize);
+		pageModel.addAttribute("totalElements", page.getTotalElements());
+		pageModel.addAttribute("totalPages", page.getTotalPages());
+		pageModel.addAttribute("isFirst", page.isFirst());
+		pageModel.addAttribute("isLast", page.isLast());
 
 		return "admin/orders";
 	}
