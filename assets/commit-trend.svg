@@ -27,232 +27,232 @@
     <rect
       class="bar"
       x="60"
-      y="270.0"
-      width="45"
-      height="10.0" />
-
-    <text
-      class="label"
-      x="60"
-      y="305">
-      16
-    </text>
-
-    <text
-      class="label"
-      x="60"
-      y="260.0">
-      1
-    </text>
-    
-    <rect
-      class="bar"
-      x="123"
       y="260.0"
       width="45"
       height="20.0" />
 
     <text
       class="label"
-      x="123"
+      x="60"
       y="305">
       18
     </text>
 
     <text
       class="label"
-      x="123"
+      x="60"
       y="250.0">
       2
     </text>
     
     <rect
       class="bar"
-      x="186"
+      x="123"
       y="250.0"
       width="45"
       height="29.999999999999996" />
 
     <text
       class="label"
-      x="186"
+      x="123"
       y="305">
       20
     </text>
 
     <text
       class="label"
-      x="186"
+      x="123"
       y="240.0">
       3
     </text>
     
     <rect
       class="bar"
-      x="249"
+      x="186"
       y="260.0"
       width="45"
       height="20.0" />
 
     <text
       class="label"
-      x="249"
+      x="186"
       y="305">
       21
     </text>
 
     <text
       class="label"
-      x="249"
+      x="186"
       y="250.0">
       2
     </text>
     
     <rect
       class="bar"
-      x="312"
+      x="249"
       y="270.0"
       width="45"
       height="10.0" />
 
     <text
       class="label"
-      x="312"
+      x="249"
       y="305">
       22
     </text>
 
     <text
       class="label"
-      x="312"
+      x="249"
       y="260.0">
       1
     </text>
     
     <rect
       class="bar"
-      x="375"
+      x="312"
       y="60.0"
       width="45"
       height="220.0" />
 
     <text
       class="label"
-      x="375"
+      x="312"
       y="305">
       23
     </text>
 
     <text
       class="label"
-      x="375"
+      x="312"
       y="50.0">
       22
     </text>
     
     <rect
       class="bar"
-      x="438"
+      x="375"
       y="240.0"
       width="45"
       height="40.0" />
 
     <text
       class="label"
-      x="438"
+      x="375"
       y="305">
       24
     </text>
 
     <text
       class="label"
-      x="438"
+      x="375"
       y="230.0">
       4
     </text>
     
     <rect
       class="bar"
-      x="501"
+      x="438"
       y="220.0"
       width="45"
       height="59.99999999999999" />
 
     <text
       class="label"
-      x="501"
+      x="438"
       y="305">
       25
     </text>
 
     <text
       class="label"
-      x="501"
+      x="438"
       y="210.0">
       6
     </text>
     
     <rect
       class="bar"
-      x="564"
+      x="501"
       y="200.0"
       width="45"
       height="80.0" />
 
     <text
       class="label"
-      x="564"
+      x="501"
       y="305">
       26
     </text>
 
     <text
       class="label"
-      x="564"
+      x="501"
       y="190.0">
       8
     </text>
     
     <rect
       class="bar"
-      x="627"
+      x="564"
       y="160.0"
       width="45"
       height="119.99999999999999" />
 
     <text
       class="label"
-      x="627"
+      x="564"
       y="305">
       27
     </text>
 
     <text
       class="label"
-      x="627"
+      x="564"
       y="150.0">
       12
     </text>
     
     <rect
       class="bar"
-      x="690"
+      x="627"
       y="190.0"
       width="45"
       height="90.0" />
 
     <text
       class="label"
-      x="690"
+      x="627"
       y="305">
       29
     </text>
 
     <text
       class="label"
-      x="690"
+      x="627"
       y="180.0">
       9
+    </text>
+    
+    <rect
+      class="bar"
+      x="690"
+      y="260.0"
+      width="45"
+      height="20.0" />
+
+    <text
+      class="label"
+      x="690"
+      y="305">
+      30
+    </text>
+
+    <text
+      class="label"
+      x="690"
+      y="250.0">
+      2
     </text>
     
     <rect
@@ -266,7 +266,7 @@
       class="label"
       x="753"
       y="305">
-      30
+      32
     </text>
 
     <text
