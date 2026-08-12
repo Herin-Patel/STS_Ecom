@@ -121,4 +121,15 @@ public class OrderServiceImpl implements OrderService {
 
 		return pageOrder;
 	}
+
+	@Override
+	public Page<ProductOrder> getOrderByOrderId(String orderId, Integer pageNumber, Integer pageSize) {
+
+		Pageable pageableObj = PageRequest.of(pageNumber, pageSize);
+		Page<ProductOrder> pageOrder = null;
+
+		pageOrder = orderRepositoryObj.findByOrderId(orderId, pageableObj);
+
+		return pageOrder;
+	}
 }

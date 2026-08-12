@@ -407,22 +407,61 @@ public class AdminController {
 	}
 
 	@GetMapping("/search-order")
-	public String searchOrder(@RequestParam String orderId, Model pageModel, HttpSession session) {
+	public String searchOrder(@RequestParam String orderId, Model pageModel, HttpSession session,
+			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+			@RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize) {
+
+		/*
+		 * if (orderId != null && orderId.length() > 0) { ProductOrder searchedOrder =
+		 * orderServiceObj.getOrderByOrderId(orderId.trim());
+		 * 
+		 * if (ObjectUtils.isEmpty(searchedOrder)) { session.setAttribute("errorMssg",
+		 * "Not order with such OrderId"); } else { pageModel.addAttribute("order",
+		 * searchedOrder); }
+		 * 
+		 * pageModel.addAttribute("orderSearched", true); } else { List<ProductOrder>
+		 * allOrders = orderServiceObj.getAllOrders();
+		 * 
+		 * pageModel.addAttribute("allOrders", allOrders);
+		 * pageModel.addAttribute("orderSearched", false);
+		 * 
+		 * return "redirect:/admin/orders"; }
+		 */
 
 		if (orderId != null && orderId.length() > 0) {
-			ProductOrder searchedOrder = orderServiceObj.getOrderByOrderId(orderId.trim());
+			Page<ProductOrder> page = orderServiceObj.getOrderByOrderId(orderId.trim(), pageNumber, pageSize);
+			List<ProductOrder> searchedOrderList = page.getContent();
 
-			if (ObjectUtils.isEmpty(searchedOrder)) {
+			if (ObjectUtils.isEmpty(searchedOrderList)) {
 				session.setAttribute("errorMssg", "Not order with such OrderId");
 			} else {
+				// ProductOrder searchedOrder = (ProductOrder) searchedOrderList;
+				ProductOrder searchedOrder = searchedOrderList.get(0);
+
 				pageModel.addAttribute("order", searchedOrder);
+				pageModel.addAttribute("orderSize", searchedOrderList.size());
+				pageModel.addAttribute("pageNumber", page.getNumber());
+				pageModel.addAttribute("pageSize", pageSize);
+				pageModel.addAttribute("totalElements", page.getTotalElements());
+				pageModel.addAttribute("totalPages", page.getTotalPages());
+				pageModel.addAttribute("isFirst", page.isFirst());
+				pageModel.addAttribute("isLast", page.isLast());
 			}
 
 			pageModel.addAttribute("orderSearched", true);
 		} else {
-			List<ProductOrder> allOrders = orderServiceObj.getAllOrders();
 
-			pageModel.addAttribute("allOrders", allOrders);
+			Page<ProductOrder> page = orderServiceObj.getAllOrders(pageNumber, pageSize);
+			List<ProductOrder> orderList = page.getContent();
+			pageModel.addAttribute("allOrders", orderList);
+			pageModel.addAttribute("orderSize", orderList.size());
+			pageModel.addAttribute("pageNumber", page.getNumber());
+			pageModel.addAttribute("pageSize", pageSize);
+			pageModel.addAttribute("totalElements", page.getTotalElements());
+			pageModel.addAttribute("totalPages", page.getTotalPages());
+			pageModel.addAttribute("isFirst", page.isFirst());
+			pageModel.addAttribute("isLast", page.isLast());
+
 			pageModel.addAttribute("orderSearched", false);
 
 			return "redirect:/admin/orders";
