@@ -407,10 +407,11 @@ public class AdminController {
 	}
 
 	@GetMapping("/search-order")
-	public String searchOrder(@RequestParam String orderId, Model pageModel, HttpSession session,
+	public String searchOrder(Model pageModel, HttpSession session, @RequestParam String orderId,
 			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
 			@RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize) {
-
+		
+		// Original logic
 		/*
 		 * if (orderId != null && orderId.length() > 0) { ProductOrder searchedOrder =
 		 * orderServiceObj.getOrderByOrderId(orderId.trim());
@@ -428,44 +429,97 @@ public class AdminController {
 		 * return "redirect:/admin/orders"; }
 		 */
 
-		if (orderId != null && orderId.length() > 0) {
+		// My approach for pagination
+		/*
+		 * if (orderId != null && orderId.length() > 0) { Page<ProductOrder> page =
+		 * orderServiceObj.getOrderByOrderId(orderId.trim(), pageNumber, pageSize);
+		 * List<ProductOrder> searchedOrderList = page.getContent();
+		 * 
+		 * if (ObjectUtils.isEmpty(searchedOrderList)) {
+		 * session.setAttribute("errorMssg", "Not order with such OrderId");
+		 * 
+		 * pageModel.addAttribute("order", null); } else { // ProductOrder searchedOrder
+		 * = (ProductOrder) searchedOrderList; ProductOrder searchedOrder =
+		 * searchedOrderList.get(0);
+		 * 
+		 * pageModel.addAttribute("order", searchedOrder);
+		 * 
+		 * }
+		 * 
+		 * pageModel.addAttribute("orderSize", searchedOrderList.size());
+		 * pageModel.addAttribute("pageNumber", page.getNumber());
+		 * pageModel.addAttribute("pageSize", pageSize);
+		 * pageModel.addAttribute("totalElements", page.getTotalElements());
+		 * pageModel.addAttribute("totalPages", page.getTotalPages());
+		 * pageModel.addAttribute("isFirst", page.isFirst());
+		 * pageModel.addAttribute("isLast", page.isLast());
+		 * 
+		 * pageModel.addAttribute("orderSearched", true); } else {
+		 * 
+		 * Page<ProductOrder> page = orderServiceObj.getAllOrders(pageNumber, pageSize);
+		 * List<ProductOrder> orderList = page.getContent();
+		 * pageModel.addAttribute("allOrders", orderList);
+		 * pageModel.addAttribute("orderSize", orderList.size());
+		 * pageModel.addAttribute("pageNumber", page.getNumber());
+		 * pageModel.addAttribute("pageSize", pageSize);
+		 * pageModel.addAttribute("totalElements", page.getTotalElements());
+		 * pageModel.addAttribute("totalPages", page.getTotalPages());
+		 * pageModel.addAttribute("isFirst", page.isFirst());
+		 * pageModel.addAttribute("isLast", page.isLast());
+		 * 
+		 * pageModel.addAttribute("orderSearched", false);
+		 * 
+		 * return "redirect:/admin/orders"; }
+		 * 
+		 * return "/admin/orders";
+		 */
+
+		// ChatGPT Logic
+		if (orderId != null && !orderId.trim().isEmpty()) {
+			
 			Page<ProductOrder> page = orderServiceObj.getOrderByOrderId(orderId.trim(), pageNumber, pageSize);
 			List<ProductOrder> searchedOrderList = page.getContent();
 
-			if (ObjectUtils.isEmpty(searchedOrderList)) {
-				session.setAttribute("errorMssg", "Not order with such OrderId");
-			} else {
-				// ProductOrder searchedOrder = (ProductOrder) searchedOrderList;
-				ProductOrder searchedOrder = searchedOrderList.get(0);
-
-				pageModel.addAttribute("order", searchedOrder);
-				pageModel.addAttribute("orderSize", searchedOrderList.size());
-				pageModel.addAttribute("pageNumber", page.getNumber());
-				pageModel.addAttribute("pageSize", pageSize);
-				pageModel.addAttribute("totalElements", page.getTotalElements());
-				pageModel.addAttribute("totalPages", page.getTotalPages());
-				pageModel.addAttribute("isFirst", page.isFirst());
-				pageModel.addAttribute("isLast", page.isLast());
-			}
-
-			pageModel.addAttribute("orderSearched", true);
-		} else {
-
-			Page<ProductOrder> page = orderServiceObj.getAllOrders(pageNumber, pageSize);
-			List<ProductOrder> orderList = page.getContent();
-			pageModel.addAttribute("allOrders", orderList);
-			pageModel.addAttribute("orderSize", orderList.size());
+			// Pagination information
+			pageModel.addAttribute("orderSize", searchedOrderList.size());
 			pageModel.addAttribute("pageNumber", page.getNumber());
 			pageModel.addAttribute("pageSize", pageSize);
 			pageModel.addAttribute("totalElements", page.getTotalElements());
 			pageModel.addAttribute("totalPages", page.getTotalPages());
 			pageModel.addAttribute("isFirst", page.isFirst());
 			pageModel.addAttribute("isLast", page.isLast());
+			
+			
+			ProductOrder searchedOrder = orderServiceObj.getOrderByOrderId(orderId.trim());
 
-			pageModel.addAttribute("orderSearched", false);
+			pageModel.addAttribute("orderSearched", true);
 
-			return "redirect:/admin/orders";
+			if (ObjectUtils.isEmpty(searchedOrder)) {
+				pageModel.addAttribute("order", null);
+
+				session.setAttribute("errorMssg", "No order found with such OrderId");
+
+			} else {
+				// ProductOrder searchedOrder = searchedOrderList.get(0);
+				pageModel.addAttribute("order", searchedOrder);
+			}
+
+			return "/admin/orders";
 		}
+
+		Page<ProductOrder> page = orderServiceObj.getAllOrders(pageNumber, pageSize);
+		List<ProductOrder> orderList = page.getContent();
+
+		pageModel.addAttribute("allOrders", orderList);
+		pageModel.addAttribute("orderSize", orderList.size());
+		pageModel.addAttribute("pageNumber", page.getNumber());
+		pageModel.addAttribute("pageSize", pageSize);
+		pageModel.addAttribute("totalElements", page.getTotalElements());
+		pageModel.addAttribute("totalPages", page.getTotalPages());
+		pageModel.addAttribute("isFirst", page.isFirst());
+		pageModel.addAttribute("isLast", page.isLast());
+
+		pageModel.addAttribute("orderSearched", false);
 
 		return "/admin/orders";
 	}
