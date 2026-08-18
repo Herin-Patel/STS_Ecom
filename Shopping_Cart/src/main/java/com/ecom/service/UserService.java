@@ -2,6 +2,7 @@ package com.ecom.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ecom.model.UserDtls;
@@ -30,4 +31,6 @@ public interface UserService {
 	public UserDtls updateUser(UserDtls user);
 	
 	public UserDtls updateUserProfile(UserDtls user, MultipartFile img);
+	
+	public Page<UserDtls> getUsers(String role, Integer pageNumber, Integer pageSize);
 }

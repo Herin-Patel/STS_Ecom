@@ -410,7 +410,7 @@ public class AdminController {
 	public String searchOrder(Model pageModel, HttpSession session, @RequestParam String orderId,
 			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
 			@RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize) {
-		
+
 		// Original logic
 		/*
 		 * if (orderId != null && orderId.length() > 0) { ProductOrder searchedOrder =
@@ -476,7 +476,7 @@ public class AdminController {
 
 		// ChatGPT Logic
 		if (orderId != null && !orderId.trim().isEmpty()) {
-			
+
 			Page<ProductOrder> page = orderServiceObj.getOrderByOrderId(orderId.trim(), pageNumber, pageSize);
 			List<ProductOrder> searchedOrderList = page.getContent();
 
@@ -488,8 +488,7 @@ public class AdminController {
 			pageModel.addAttribute("totalPages", page.getTotalPages());
 			pageModel.addAttribute("isFirst", page.isFirst());
 			pageModel.addAttribute("isLast", page.isLast());
-			
-			
+
 			ProductOrder searchedOrder = orderServiceObj.getOrderByOrderId(orderId.trim());
 
 			pageModel.addAttribute("orderSearched", true);
@@ -529,9 +528,26 @@ public class AdminController {
 	 ****************************************/
 
 	@GetMapping("/users")
-	public String getAllUsers(Model pageModel) {
-		List<UserDtls> allUsers = userServiceObj.getUsers("ROLE_USER");
+	public String getAllUsers(Model pageModel,
+			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+			@RequestParam(name = "pageSize", defaultValue = "3") Integer pageSize) {
+		/*
+		 * List<UserDtls> allUsers = userServiceObj.getUsers("ROLE_USER");
+		 * pageModel.addAttribute("users", allUsers);
+		 */
+
+		Page<UserDtls> page = userServiceObj.getUsers("ROLE_USER", pageNumber, pageSize);
+		List<UserDtls> allUsers = page.getContent();
+
 		pageModel.addAttribute("users", allUsers);
+		pageModel.addAttribute("userSize", allUsers.size());
+		pageModel.addAttribute("pageNumber", pageNumber);
+		pageModel.addAttribute("pageSize", pageSize);
+		pageModel.addAttribute("totalElements", page.getTotalElements());
+		pageModel.addAttribute("totalPages", page.getTotalPages());
+		pageModel.addAttribute("isFirst", page.isFirst());
+		pageModel.addAttribute("isLast", page.isLast());
+
 		return "admin/users";
 	}
 

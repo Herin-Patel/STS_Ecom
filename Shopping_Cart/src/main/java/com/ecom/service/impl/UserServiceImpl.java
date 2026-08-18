@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -141,9 +145,9 @@ public class UserServiceImpl implements UserService {
 
 		try {
 			if (!imageFile.isEmpty()) {
-				
+
 				currentUser.setProfileImage(imageFile.getOriginalFilename());
-				
+
 				/*
 				 * File saveFile = new ClassPathResource("static/img").getFile();
 				 * 
@@ -165,15 +169,24 @@ public class UserServiceImpl implements UserService {
 				String imageName = imageFile.getOriginalFilename();
 				Path filePath = Paths.get(uploadDir + imageName);
 
-				Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);	
+				Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-			
+
 			return null;
 		}
 
 		return currentUser;
+	}
+
+	public Page<UserDtls> getUsers(String role, Integer pageNumber, Integer pageSize) {
+
+		Pageable pageableObj = PageRequest.of(pageNumber, pageSize);
+		Page<UserDtls> pageOrder = null;
+
+		pageOrder = userRepositoryObj.findByRole(role, pageableObj);
+
+		return pageOrder;
 	}
 }

@@ -9,11 +9,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ecom.model.ProductOrder;
 
 public interface ProductOrderRepository extends JpaRepository<ProductOrder, Integer> {
-	List<ProductOrder> findByUserId(Integer userId);
+	public List<ProductOrder> findByUserId(Integer userId);
 
-	ProductOrder findByOrderId(String orderId);
+	public ProductOrder findByOrderId(String orderId);
 
-	Page<ProductOrder> findAll(Pageable pageableObj);
+	public Page<ProductOrder> findAll(Pageable pageableObj);
 
-	Page<ProductOrder> findByOrderId(String orderId, Pageable pageableObj);
+	public Page<ProductOrder> findByOrderId(String orderId, Pageable pageableObj);
 }
