@@ -189,4 +189,18 @@ public class UserServiceImpl implements UserService {
 
 		return pageOrder;
 	}
+
+	@Override
+	public UserDtls saveAdminUser(UserDtls adminUser) {
+		adminUser.setRole("ROLE_ADMIN");
+		adminUser.setIsEnable(true);
+		adminUser.setAccountNotLocked(true);
+		adminUser.setFailedAttempt(0);
+
+		String encodedPassword = passwordEncoder.encode(adminUser.getPassword());
+		adminUser.setPassword(encodedPassword);
+
+		UserDtls savedAdminUser = userRepositoryObj.save(adminUser);
+		return savedAdminUser;
+	}
 }

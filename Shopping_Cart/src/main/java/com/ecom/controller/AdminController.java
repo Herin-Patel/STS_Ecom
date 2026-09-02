@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -578,6 +579,60 @@ public class AdminController {
 
 		List<Category> allActiveCategory = categoryServiceObj.getAllActiveCategory();
 		pageModel.addAttribute("categorys", allActiveCategory);
+	}
+
+	/****************************************
+	 * Manage Admins Section
+	 ****************************************/
+	
+	@GetMapping("/add-admin")  
+	public String loadAddAdmin() {
+		return "/admin/add_admin.html";
+	}
+	
+	
+	@PostMapping("/save-admin")
+	public String saveAdmin(@ModelAttribute UserDtls adminUser, @RequestParam("img") MultipartFile file,
+			HttpSession session) {
+
+		String imageName = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
+		adminUser.setProfileImage(imageName);
+
+		UserDtls savedAdminUser = userServiceObj.saveAdminUser(adminUser);
+
+		if (!ObjectUtils.isEmpty(savedAdminUser)) {
+			if (!file.isEmpty()) {
+				/*
+				 * File saveFile = new ClassPathResource("static/img").getFile();
+				 * 
+				 * Path path = Paths.get(saveFile.getAbsolutePath() + File.separator +
+				 * "profile_img" + File.separator + file.getOriginalFilename());
+				 * 
+				 * // System.out.println(path); Files.copy(file.getInputStream(), path,
+				 * StandardCopyOption.REPLACE_EXISTING);
+				 */
+
+				// Save image to folder
+				String uploadDir = "C:/Users/herry/Desktop/STS_Workspace/Shopping_Cart/src/main/resources/static/img/profile_img/";
+				// "C:\\Users\\herry\\Desktop\\STS_Workspace\\Shopping_Cart\\src\\main\\resources\\static\\img\\category_img"
+
+				File dir = new File(uploadDir);
+				if (!dir.exists())
+					dir.mkdirs();
+
+				Path filePath = Paths.get(uploadDir + imageName);
+				try {
+					Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			session.setAttribute("successMssg", "Admin registered successfully");
+		} else {
+			session.setAttribute("errorMssg", "Something went wrong on Server !");
+		}
+
+		return "redirect:/admin/add-admin";
 	}
 
 }

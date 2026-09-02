@@ -84,9 +84,6 @@
 						<li class="nav-item">
 							<a class="nav-link active" aria-current="page" href="/register">Register</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="#">Admin</a>
-						</li>
 					</th:block>
 
 					<th:block th:if="${user!=null}">
@@ -115,9 +112,11 @@
 								<li><a class="dropdown-item" href="/user/profile">
 										<i class="fa-solid fa-user"></i>
 										Profile</a></li>
-								<li><a class="dropdown-item" href="/user/user-orders">
+								<li th:if="${user.role=='ROLE_USER'}">
+									<a class="dropdown-item" href="/user/user-orders">
 										<i class="fa-solid fa-cart-shopping"></i>
-										My Orders</a></li>
+										My Orders</a>
+								</li>
 								<li><a class="dropdown-item" href="/logout">
 										<i class="fa-solid fa-right-to-bracket"></i>
 										Logout</a></li>

@@ -33,4 +33,6 @@ public interface UserService {
 	public UserDtls updateUserProfile(UserDtls user, MultipartFile img);
 	
 	public Page<UserDtls> getUsers(String role, Integer pageNumber, Integer pageSize);
+	
+	public UserDtls saveAdminUser(UserDtls adminUser);
 }
