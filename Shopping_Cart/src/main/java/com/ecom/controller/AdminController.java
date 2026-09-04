@@ -29,6 +29,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,9 +60,28 @@ public class AdminController {
 	@Autowired
 	private CommonUtil commonUtilObj;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 	@GetMapping("/")
 	public String index() {
 		return "admin/index";
+	}
+
+	/****************************************
+	 * Handle Admin Profile
+	 ****************************************/
+
+	@ModelAttribute
+	public void getAdminDetails(Principal p, Model pageModel) {
+		if (p != null) {
+			// String email = p.getName();
+			// UserDtls userDtls = userServiceObj.getUserByEmail(email);
+
+			UserDtls userDtls = commonUtilObj.getLoggedInUserDetails(p);
+
+			pageModel.addAttribute("user", userDtls);
+		}
 	}
 
 	/****************************************
@@ -584,13 +604,12 @@ public class AdminController {
 	/****************************************
 	 * Manage Admins Section
 	 ****************************************/
-	
-	@GetMapping("/add-admin")  
+
+	@GetMapping("/add-admin")
 	public String loadAddAdmin() {
 		return "/admin/add_admin.html";
 	}
-	
-	
+
 	@PostMapping("/save-admin")
 	public String saveAdmin(@ModelAttribute UserDtls adminUser, @RequestParam("img") MultipartFile file,
 			HttpSession session) {
@@ -633,6 +652,52 @@ public class AdminController {
 		}
 
 		return "redirect:/admin/add-admin";
+	}
+
+	@GetMapping("/profile")
+	public String viewProfile() {
+		return "/admin/profile";
+	}
+
+	@PostMapping("/update-profile")
+	public String updateProfile(@ModelAttribute UserDtls user, @RequestParam MultipartFile imageFile,
+			HttpSession session) {
+
+		UserDtls updatedUserProfile = userServiceObj.updateUserProfile(user, imageFile);
+
+		if (ObjectUtils.isEmpty(updatedUserProfile)) {
+			session.setAttribute("errorMssg", "Profile not updated. Something went wrong !");
+		} else {
+			session.setAttribute("successMssg", "Profile updated successfully");
+		}
+
+		return "redirect:/admin/profile";
+	}
+
+	@PostMapping("/change-password")
+	public String changePassword(@RequestParam String newPassword, @RequestParam String currentPassword, Principal p,
+			HttpSession session) {
+
+		UserDtls loggedInUserDetails = commonUtilObj.getLoggedInUserDetails(p);
+
+		boolean passwordMatch = passwordEncoder.matches(currentPassword, loggedInUserDetails.getPassword());
+
+		if (passwordMatch) {
+			String encodedPassword = passwordEncoder.encode(newPassword);
+			loggedInUserDetails.setPassword(encodedPassword);
+
+			UserDtls updatedUser = userServiceObj.updateUser(loggedInUserDetails);
+			if (ObjectUtils.isEmpty(updatedUser)) {
+				session.setAttribute("errorMssg", "Password not updated ! Something went wrong on Server.");
+			} else {
+				session.setAttribute("successMssg", "Password updated successfully.");
+			}
+
+		} else {
+			session.setAttribute("errorMssg", "Current Password incorrect !");
+		}
+
+		return "redirect:/admin/profile";
 	}
 
 }

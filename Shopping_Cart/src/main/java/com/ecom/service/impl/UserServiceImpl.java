@@ -140,41 +140,43 @@ public class UserServiceImpl implements UserService {
 			currentUser.setState(user.getState());
 			currentUser.setPincode(user.getPincode());
 
-			currentUser = userRepositoryObj.save(currentUser);
-		}
+			try {
+				if (!imageFile.isEmpty()) {
 
-		try {
-			if (!imageFile.isEmpty()) {
+					currentUser.setProfileImage(imageFile.getOriginalFilename());
 
-				currentUser.setProfileImage(imageFile.getOriginalFilename());
+					/*
+					 * File saveFile = new ClassPathResource("static/img").getFile();
+					 * 
+					 * Path path = Paths.get(saveFile.getAbsolutePath() + File.separator +
+					 * "profile_img" + File.separator + file.getOriginalFilename());
+					 * 
+					 * // System.out.println(path); Files.copy(file.getInputStream(), path,
+					 * StandardCopyOption.REPLACE_EXISTING);
+					 */
 
-				/*
-				 * File saveFile = new ClassPathResource("static/img").getFile();
-				 * 
-				 * Path path = Paths.get(saveFile.getAbsolutePath() + File.separator +
-				 * "profile_img" + File.separator + file.getOriginalFilename());
-				 * 
-				 * // System.out.println(path); Files.copy(file.getInputStream(), path,
-				 * StandardCopyOption.REPLACE_EXISTING);
-				 */
+					// Save image to folder
+					String uploadDir = "C:/Users/herry/Desktop/STS_Workspace/Shopping_Cart/src/main/resources/static/img/profile_img/";
+					// "C:\\Users\\herry\\Desktop\\STS_Workspace\\Shopping_Cart\\src\\main\\resources\\static\\img\\category_img"
 
-				// Save image to folder
-				String uploadDir = "C:/Users/herry/Desktop/STS_Workspace/Shopping_Cart/src/main/resources/static/img/profile_img/";
-				// "C:\\Users\\herry\\Desktop\\STS_Workspace\\Shopping_Cart\\src\\main\\resources\\static\\img\\category_img"
+					File dir = new File(uploadDir);
+					if (!dir.exists())
+						dir.mkdirs();
 
-				File dir = new File(uploadDir);
-				if (!dir.exists())
-					dir.mkdirs();
+					String imageName = imageFile.getOriginalFilename();
+					Path filePath = Paths.get(uploadDir + imageName);
 
-				String imageName = imageFile.getOriginalFilename();
-				Path filePath = Paths.get(uploadDir + imageName);
+					Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-				Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+
+				return null;
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 
-			return null;
+			currentUser = userRepositoryObj.save(currentUser);
 		}
 
 		return currentUser;

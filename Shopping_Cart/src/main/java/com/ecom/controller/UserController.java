@@ -62,7 +62,7 @@ public class UserController {
 			// String email = p.getName();
 			// UserDtls userDtls = userServiceObj.getUserByEmail(email);
 
-			UserDtls userDtls = getLoggedInUserDetails(p);
+			UserDtls userDtls = commonUtilObj.getLoggedInUserDetails(p);
 
 			pageModel.addAttribute("user", userDtls);
 
@@ -88,7 +88,7 @@ public class UserController {
 
 	@GetMapping("/cart")
 	public String loadCartPage(Principal p, Model pageModel) {
-		UserDtls user = getLoggedInUserDetails(p);
+		UserDtls user = commonUtilObj.getLoggedInUserDetails(p);
 
 		List<Cart> carts = cartServiceObj.getCartsByUser(user.getId());
 		pageModel.addAttribute("carts", carts);
@@ -99,16 +99,6 @@ public class UserController {
 		}
 
 		return "/user/cart";
-	}
-
-	private UserDtls getLoggedInUserDetails(Principal p) {
-		String email = p.getName();
-		UserDtls userDtls = userServiceObj.getUserByEmail(email);
-
-		if (ObjectUtils.isEmpty(userDtls)) {
-			return null;
-		}
-		return userDtls;
 	}
 
 	@GetMapping("/cartQuantityUpdate")
@@ -127,7 +117,7 @@ public class UserController {
 
 	@GetMapping("/orders")
 	public String orderPage(Principal p, Model pageModel) {
-		UserDtls user = getLoggedInUserDetails(p);
+		UserDtls user = commonUtilObj.getLoggedInUserDetails(p);
 
 		List<Cart> carts = cartServiceObj.getCartsByUser(user.getId());
 		pageModel.addAttribute("carts", carts);
@@ -147,7 +137,7 @@ public class UserController {
 	public String saveOrder(@ModelAttribute OrderRequest request, Principal p) throws Exception {
 		// System.out.println(request);
 
-		UserDtls currentUserDtls = getLoggedInUserDetails(p);
+		UserDtls currentUserDtls = commonUtilObj.getLoggedInUserDetails(p);
 
 		orderServiceObj.saveOrder(currentUserDtls.getId(), request);
 
@@ -162,7 +152,7 @@ public class UserController {
 	@GetMapping("/user-orders")
 	public String myOrder(Model pageModel, Principal p) {
 
-		UserDtls loggedUser = getLoggedInUserDetails(p);
+		UserDtls loggedUser = commonUtilObj.getLoggedInUserDetails(p);
 
 		List<ProductOrder> userOrders = orderServiceObj.getOrderByUser(loggedUser.getId());
 
@@ -226,7 +216,7 @@ public class UserController {
 	public String changePassword(@RequestParam String newPassword, @RequestParam String currentPassword, Principal p,
 			HttpSession session) {
 
-		UserDtls loggedInUserDetails = getLoggedInUserDetails(p);
+		UserDtls loggedInUserDetails = commonUtilObj.getLoggedInUserDetails(p);
 
 		boolean passwordMatch = passwordEncoder.matches(currentPassword, loggedInUserDetails.getPassword());
 

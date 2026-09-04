@@ -1,13 +1,17 @@
 package com.ecom.util;
 
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import com.ecom.model.ProductOrder;
+import com.ecom.model.UserDtls;
+import com.ecom.service.UserService;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -19,15 +23,16 @@ public class CommonUtil {
 	@Autowired
 	private JavaMailSender mailSender;
 
+	@Autowired
+	private UserService userServiceObj;
+
 	public Boolean sendMail(String url, String recipientMail) throws UnsupportedEncodingException, MessagingException {
 
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 
-		String content = "<p>Hello, </p>" 
-				+ "<p>You have requested to reset your password. </p>"
-				+ "<p>Click the link below to change your password : </p>" 
-				+ "<p><a href=\"" + url
+		String content = "<p>Hello, </p>" + "<p>You have requested to reset your password. </p>"
+				+ "<p>Click the link below to change your password : </p>" + "<p><a href=\"" + url
 				+ "\">Change my password</a></p>";
 
 		helper.setFrom("herrypatel7290@gmail.com", "Shopping Cart");
@@ -46,21 +51,17 @@ public class CommonUtil {
 
 		return siteUrl.replace(request.getServletPath(), "");
 	}
-	
-	
-	public Boolean sendMailForProductOrder(ProductOrder order, String orderStatus) throws Exception, MessagingException {
+
+	public Boolean sendMailForProductOrder(ProductOrder order, String orderStatus)
+			throws Exception, MessagingException {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
-		
-		String orderContent = "<p>Hello , [[name]]</p>"
-				  + "<p>Thank you, your order is <b>[[orderStatus]]</b>.</p><br>"
-				  + "<p>Product Details :- </p>"
-				  + "<p>Name : [[productName]] </p>"
-				  + "<p>Category : [[category]] </p>"
-				  + "<p>Quantity : [[quantity]] </p>"
-				  + "<p>Price : [[price]] </p>"
-				  + "<p>Payment Type : [[paymentType]] </p>";
-	
+
+		String orderContent = "<p>Hello , [[name]]</p>" + "<p>Thank you, your order is <b>[[orderStatus]]</b>.</p><br>"
+				+ "<p>Product Details :- </p>" + "<p>Name : [[productName]] </p>" + "<p>Category : [[category]] </p>"
+				+ "<p>Quantity : [[quantity]] </p>" + "<p>Price : [[price]] </p>"
+				+ "<p>Payment Type : [[paymentType]] </p>";
+
 		orderContent = orderContent.replace("[[name]]", order.getOrderAddress().getFirstName());
 		orderContent = orderContent.replace("[[orderStatus]]", orderStatus);
 		orderContent = orderContent.replace("[[productName]]", order.getProduct().getTitle());
@@ -81,5 +82,15 @@ public class CommonUtil {
 		}
 
 		return true;
+	}
+
+	public UserDtls getLoggedInUserDetails(Principal p) {
+		String email = p.getName();
+		UserDtls userDtls = userServiceObj.getUserByEmail(email);
+
+		if (ObjectUtils.isEmpty(userDtls)) {
+			return null;
+		}
+		return userDtls;
 	}
 }
