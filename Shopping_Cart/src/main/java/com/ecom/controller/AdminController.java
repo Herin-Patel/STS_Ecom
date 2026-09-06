@@ -549,7 +549,7 @@ public class AdminController {
 	 ****************************************/
 
 	@GetMapping("/users")
-	public String getAllUsers(Model pageModel,
+	public String getAllUsers(Model pageModel, @RequestParam(name = "userType", defaultValue = "1") Integer userType,
 			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
 			@RequestParam(name = "pageSize", defaultValue = "3") Integer pageSize) {
 		/*
@@ -557,7 +557,15 @@ public class AdminController {
 		 * pageModel.addAttribute("users", allUsers);
 		 */
 
-		Page<UserDtls> page = userServiceObj.getUsers("ROLE_USER", pageNumber, pageSize);
+		Page<UserDtls> page = null;
+		if (userType == 1) {
+			page = userServiceObj.getUsers("ROLE_USER", pageNumber, pageSize);
+		} else if (userType == 2) {
+			page = userServiceObj.getUsers("ROLE_ADMIN", pageNumber, pageSize);
+		} else {
+			// Need to provide an exceptional condition
+		}
+
 		List<UserDtls> allUsers = page.getContent();
 
 		pageModel.addAttribute("users", allUsers);
@@ -568,12 +576,14 @@ public class AdminController {
 		pageModel.addAttribute("totalPages", page.getTotalPages());
 		pageModel.addAttribute("isFirst", page.isFirst());
 		pageModel.addAttribute("isLast", page.isLast());
+		pageModel.addAttribute("userType", userType);
 
 		return "admin/users";
 	}
 
 	@GetMapping("/updateStatus")
-	public String updateUserAccountStatus(@RequestParam Boolean status, @RequestParam Integer id, HttpSession session) {
+	public String updateUserAccountStatus(@RequestParam Boolean status, @RequestParam Integer id,
+			@RequestParam Integer userType, HttpSession session) {
 		Boolean value = userServiceObj.updateAccountStatus(id, status);
 
 		if (value) {
@@ -582,18 +592,21 @@ public class AdminController {
 			session.setAttribute("errorMssg", "Something went wrong on Server ! Account status not updated.");
 		}
 
-		return "redirect:/admin/users";
+		return "redirect:/admin/users?userType=" + userType;
 	}
 
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model pageModel) {
 		if (p != null) {
-			String email = p.getName();
-			UserDtls userDtls = userServiceObj.getUserByEmail(email);
+			/*
+			 * String email = p.getName(); UserDtls userDtls =
+			 * userServiceObj.getUserByEmail(email);
+			 */
+
+			UserDtls userDtls = commonUtilObj.getLoggedInUserDetails(p);
+			Integer userCartCount = cartServiceObj.getUserCartCount(userDtls.getId());
 
 			pageModel.addAttribute("user", userDtls);
-
-			Integer userCartCount = cartServiceObj.getUserCartCount(userDtls.getId());
 			pageModel.addAttribute("userCartCount", userCartCount);
 		}
 

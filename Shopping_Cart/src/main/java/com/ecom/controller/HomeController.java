@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.util.StringUtils;
 
 import com.ecom.model.Category;
 import com.ecom.model.Product;
@@ -61,8 +62,11 @@ public class HomeController {
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model pageModel) {
 		if (p != null) {
-			String userEmail = p.getName();
-			UserDtls userDtls = userServiceObj.getUserByEmail(userEmail);
+			/*
+			 * String userEmail = p.getName(); UserDtls userDtls =
+			 * userServiceObj.getUserByEmail(userEmail);
+			 */
+			UserDtls userDtls = commonUtilObj.getLoggedInUserDetails(p);
 
 			pageModel.addAttribute("user", userDtls);
 
@@ -96,7 +100,8 @@ public class HomeController {
 	@GetMapping("/products")
 	public String products(Model pageModel, @RequestParam(value = "category", defaultValue = "") String category,
 			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
-			@RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize) {
+			@RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize,
+			@RequestParam(name = "productSearch", defaultValue = "") String productSearch) {
 
 		System.out.println("category = " + category);
 		List<Category> activeCategories = categoryServiceObj.getAllActiveCategory();
@@ -107,7 +112,14 @@ public class HomeController {
 		// productServiceObj.getAllActiveProducts(category);
 		// pageModel.addAttribute("products", activeProducts);
 
-		Page<Product> page = productServiceObj.getAllActiveProductPagination(pageNumber, pageSize, category);
+		Page<Product> page = null;
+
+		if (StringUtils.isEmpty(productSearch)) {
+			page = productServiceObj.getAllActiveProductPagination(pageNumber, pageSize, category);
+		} else {
+			page = productServiceObj.searchActiveProductPagination(pageNumber, pageSize, productSearch);
+		}
+
 		List<Product> productList = page.getContent();
 		pageModel.addAttribute("products", productList);
 		pageModel.addAttribute("productSize", productList.size());

@@ -24,7 +24,8 @@
 
 			<div class="card card-sh">
 				<div class="card-header text-center">
-					<p class="fs-4">Users</p>
+					<p class="fs-4" th:if="${userType==1}">Users</p>
+					<p class="fs-4" th:if="${userType==2}">Admins</p>
 					<th:block th:if="${session.successMssg}">
 						<p class="text-success fw-bold">
 							[[${session.successMssg}]]
@@ -69,11 +70,11 @@
 									<td>[[${u.address + ',' + u.city + ',' + u.state + ',' + u.pincode}]]</td>
 									<td>[[${u.isEnable}]]</td>
 									<td>
-										<a th:href="@{'/admin/updateStatus?status=true&id='+${u.id}}"
+										<a th:href="@{'/admin/updateStatus?status=true&id='+${u.id}+'&userType='+${userType}}"
 											class="btn btn-sm btn-primary">
 											Active
 										</a>
-										<a th:href="@{'/admin/updateStatus?status=false&id='+${u.id}}"
+										<a th:href="@{'/admin/updateStatus?status=false&id='+${u.id}+'&userType='+${userType}}"
 											class="btn btn-sm btn-danger">
 											Inactive
 										</a>

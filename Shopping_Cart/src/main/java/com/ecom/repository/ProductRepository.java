@@ -13,7 +13,8 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
 	public List<Product> findByCategory(String category);
 
-	public List<Product> findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(String keyword1, String keyword2);
+	public List<Product> findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(String keyword1,
+			String keyword2);
 
 	public Page<Product> findByIsActiveTrue(Pageable pageableObj);
 
@@ -21,6 +22,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
 	public Page<Product> findAll(Pageable pageableObj);
 
-	public Page<Product> findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(Pageable pageableObj, String keyword1,
-			String keyword2);
+	public Page<Product> findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(Pageable pageableObj,
+			String keyword1, String keyword2);
+
+	public Page<Product> findByisActiveTrueAndTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(
+			Pageable pageableObj, String keyword1, String keyword2);
 }
