@@ -79,7 +79,14 @@ public class HomeController {
 	}
 
 	@GetMapping("/")
-	public String index() {
+	public String index(Model pageModel) {
+
+		List<Category> allActiveCategory = categoryServiceObj.getAllActiveCategory().stream().limit(6).toList();
+		List<Product> allActiveProducts = productServiceObj.getAllActiveProducts("").stream().limit(8).toList();
+
+		pageModel.addAttribute("category", allActiveCategory);
+		pageModel.addAttribute("products", allActiveProducts);
+
 		return "index";
 	}
 
@@ -254,20 +261,21 @@ public class HomeController {
 		}
 	}
 
-	@GetMapping("/search-product")
-	public String searchProduct(@RequestParam String ch, Model pageModel) {
+	/*
+	 * @GetMapping("/search-product") public String searchProduct(@RequestParam
+	 * String ch, Model pageModel) {
+	 * 
+	 * List<Product> searchedProduct = productServiceObj.searchProduct(ch);
+	 * List<Category> activeCategories = categoryServiceObj.getAllActiveCategory();
+	 * 
+	 * if (ObjectUtils.isEmpty(searchedProduct)) { // What if no products are
+	 * available with the User suggestion. Then how to // display no product
+	 * available }
+	 * 
+	 * pageModel.addAttribute("categories", activeCategories);
+	 * pageModel.addAttribute("products", searchedProduct);
+	 * 
+	 * return "product"; }
+	 */
 
-		List<Product> searchedProduct = productServiceObj.searchProduct(ch);
-		List<Category> activeCategories = categoryServiceObj.getAllActiveCategory();
-
-		if (ObjectUtils.isEmpty(searchedProduct)) {
-			// What if no products are available with the User suggestion. Then how to
-			// display no product available
-		}
-
-		pageModel.addAttribute("categories", activeCategories);
-		pageModel.addAttribute("products", searchedProduct);
-
-		return "product";
-	}
 }
