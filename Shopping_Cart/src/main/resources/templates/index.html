@@ -191,49 +191,18 @@
 					Latest Product
 				</p>
 
-				<div class="col-md-3">
+				<div class="col-md-3" th:each="p:${products}">
 					<div class="card rounded-circle shadow-sm p-3 mb-5 bg-body-tertiary rounded">
 						<div class="card-body text-center">
-							<img src="img/product_img/laptop.jpg" class="" width="65%" height="160px">
+							<img alt="" th:src="@{'img/product_img/'+${p.image}}" class="" width="65%" height="160px">
 							<p class="text-center">
-								HP Laptop
+								[[${p.title}]]
 							</p>
 						</div>
 					</div>
 				</div>
 
-				<div class="col-md-3">
-					<div class="card rounded-circle shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-						<div class="card-body text-center">
-							<img src="img/product_img/laptop.jpg" class="" width="65%" height="160px">
-							<p class="text-center">
-								HP Laptop
-							</p>
-						</div>
-					</div>
-				</div>
 
-				<div class="col-md-3">
-					<div class="card rounded-circle shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-						<div class="card-body text-center">
-							<img src="img/product_img/laptop.jpg" class="" width="65%" height="160px">
-							<p class="text-center">
-								HP Laptop
-							</p>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-3">
-					<div class="card rounded-circle shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-						<div class="card-body text-center">
-							<img src="img/product_img/laptop.jpg" class="" width="65%" height="160px">
-							<p class="text-center">
-								HP Laptop
-							</p>
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 

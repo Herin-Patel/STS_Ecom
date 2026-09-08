@@ -1,0 +1,23 @@
+E-Commerce Project
+
+
+Bugs found :- 
+
+
+Date : 06/09/2026
+Day : Sunday
+
+1. There is a feature of 'Active' and 'Inactive' categories that can be changed by Admin user. While viewing products on the site, need to display only 'Active' categories on the left-side of the 'Categories' panel. Currently, it is displaying all the categories, irrespective of whether it is active or inactive. Need to work on that.
+
+
+
+
+
+
+Date : 08/09/2026
+Day : Tuesday
+
+1. While viewing products, if we want to view products of a particular category then on clicking 'Next' or on '2' button, it redirects to 2nd page of 'All Products' category and not for the respective category. This needs to be updated in redirecting page address based on category selected. Error occurred while trying to resolve on my own, needs to be done in ChatGPT.
+E.g.: 
+First-page -> http://localhost:8080/products?pageNumber=0&category=Laptops
+Second-page -> http://localhost:8080/products?pageNumber=1&category=Laptops
