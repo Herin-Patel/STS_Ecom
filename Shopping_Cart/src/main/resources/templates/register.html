@@ -46,7 +46,8 @@
 
 						</div>
 						<div class="card-body">
-							<form action="/saveUser" enctype="multipart/form-data" method="post">
+							<form action="/saveUser" enctype="multipart/form-data" id="userRegister" novalidate
+								method="post">
 								<div class="row">
 									<div class="col">
 										<label class="form-label">
@@ -110,7 +111,7 @@
 										<label class="form-label">
 											Password
 										</label>
-										<input required class="form-control" name="password" type="password">
+										<input required class="form-control" name="password" type="password" id="pass">
 									</div>
 
 									<div class="col">
@@ -118,15 +119,16 @@
 										<label class="form-label">
 											Confirm Password
 										</label>
-										<input required class="form-control" name="cpassword" type="password">
+										<input required class="form-control" name="confirmPassword" type="password"
+											id="">
 									</div>
-								</div> 
+								</div>
 
 								<div class="mb-3">
 									<label class="form-label">
 										Profile Image
 									</label>
-									<input class="form-control" name="img" type="file">
+									<input required class="form-control" name="img" type="file">
 								</div>
 
 								<button type="submit" class="btn bg-primary text-white col-md-12">Register</button>

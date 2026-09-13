@@ -78,6 +78,10 @@ public class HomeController {
 		pageModel.addAttribute("categorys", allActiveCategory);
 	}
 
+	/****************************************
+	 * Home-page details
+	 ****************************************/
+
 	@GetMapping("/")
 	public String index(Model pageModel) {
 
@@ -95,6 +99,14 @@ public class HomeController {
 		return "index";
 	}
 
+	/*
+	 * @GetMapping("/base") public String base() { return "base"; }
+	 */
+
+	/****************************************
+	 * Login details
+	 ****************************************/
+
 	@GetMapping("/signin")
 	public String login() {
 		return "login";
@@ -103,53 +115,6 @@ public class HomeController {
 	@GetMapping("/register")
 	public String register() {
 		return "register";
-	}
-
-	/*
-	 * @GetMapping("/base") public String base() { return "base"; }
-	 */
-
-	@GetMapping("/products")
-	public String products(Model pageModel, @RequestParam(value = "category", defaultValue = "") String category,
-			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
-			@RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize,
-			@RequestParam(name = "productSearch", defaultValue = "") String productSearch) {
-
-		System.out.println("category = " + category);
-		List<Category> activeCategories = categoryServiceObj.getAllActiveCategory();
-		pageModel.addAttribute("categories", activeCategories);
-		pageModel.addAttribute("paramValue", category);
-
-		// List<Product> activeProducts =
-		// productServiceObj.getAllActiveProducts(category);
-		// pageModel.addAttribute("products", activeProducts);
-
-		Page<Product> page = null;
-
-		if (StringUtils.isEmpty(productSearch)) {
-			page = productServiceObj.getAllActiveProductPagination(pageNumber, pageSize, category);
-		} else {
-			page = productServiceObj.searchActiveProductPagination(pageNumber, pageSize, productSearch);
-		}
-
-		List<Product> productList = page.getContent();
-		pageModel.addAttribute("products", productList);
-		pageModel.addAttribute("productSize", productList.size());
-		pageModel.addAttribute("pageNumber", page.getNumber());
-		pageModel.addAttribute("pageSize", pageSize);
-		pageModel.addAttribute("totalElements", page.getTotalElements());
-		pageModel.addAttribute("totalPages", page.getTotalPages());
-		pageModel.addAttribute("isFirst", page.isFirst());
-		pageModel.addAttribute("isLast", page.isLast());
-
-		return "product";
-	}
-
-	@GetMapping("/product/{id}")
-	public String product(@PathVariable int id, Model pageModel) {
-		Product productById = productServiceObj.getProductById(id);
-		pageModel.addAttribute("product", productById);
-		return "view_product";
 	}
 
 	@PostMapping("/saveUser")
@@ -196,7 +161,10 @@ public class HomeController {
 		return "redirect:/register";
 	}
 
-	// Forgot Password Code
+	/****************************************
+	 * Forgot Password
+	 ****************************************/
+
 	@GetMapping("/forgot-password")
 	public String showForgotPassword() {
 		return "forgot_password.html";
@@ -266,9 +234,56 @@ public class HomeController {
 		}
 	}
 
+	
+	/****************************************
+	 * Product details
+	 ****************************************/
+	
+	@GetMapping("/products")
+	public String products(Model pageModel, @RequestParam(value = "category", defaultValue = "") String category,
+			@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+			@RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize,
+			@RequestParam(name = "productSearch", defaultValue = "") String productSearch) {
+
+		System.out.println("category = " + category);
+		List<Category> activeCategories = categoryServiceObj.getAllActiveCategory();
+		pageModel.addAttribute("categories", activeCategories);
+		pageModel.addAttribute("paramValue", category);
+
+		// List<Product> activeProducts =
+		// productServiceObj.getAllActiveProducts(category);
+		// pageModel.addAttribute("products", activeProducts);
+
+		Page<Product> page = null;
+
+		if (StringUtils.isEmpty(productSearch)) {
+			page = productServiceObj.getAllActiveProductPagination(pageNumber, pageSize, category);
+		} else {
+			page = productServiceObj.searchActiveProductPagination(pageNumber, pageSize, productSearch);
+		}
+
+		List<Product> productList = page.getContent();
+		pageModel.addAttribute("products", productList);
+		pageModel.addAttribute("productSize", productList.size());
+		pageModel.addAttribute("pageNumber", page.getNumber());
+		pageModel.addAttribute("pageSize", pageSize);
+		pageModel.addAttribute("totalElements", page.getTotalElements());
+		pageModel.addAttribute("totalPages", page.getTotalPages());
+		pageModel.addAttribute("isFirst", page.isFirst());
+		pageModel.addAttribute("isLast", page.isLast());
+
+		return "product";
+	}
+
+	@GetMapping("/product/{id}")
+	public String product(@PathVariable int id, Model pageModel) {
+		Product productById = productServiceObj.getProductById(id);
+		pageModel.addAttribute("product", productById);
+		return "view_product";
+	}
+
 	/*
-	 * @GetMapping("/search-product") public String searchProduct(@RequestParam
-	 * String ch, Model pageModel) {
+	 * @GetMapping("/search-product") public String searchProduct(@RequestParam String ch, Model pageModel) {
 	 * 
 	 * List<Product> searchedProduct = productServiceObj.searchProduct(ch);
 	 * List<Category> activeCategories = categoryServiceObj.getAllActiveCategory();

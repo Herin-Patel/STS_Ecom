@@ -21,3 +21,13 @@ Day : Tuesday
 E.g.: 
 First-page -> http://localhost:8080/products?pageNumber=0&category=Laptops
 Second-page -> http://localhost:8080/products?pageNumber=1&category=Laptops
+
+
+
+
+
+
+Date : 13/09/2026
+Day : Sunday
+
+1. Tried to add javascript validation. When a user tries to register for the first time, then it works fine. However, when the next user tries to register with only half of the information as filled by the first register, then also it gets successfully registered without even performing the javascript validation. Need to clear the cycle before loading the register page for the next user. Check can be perfomed by seeing the details in database.
